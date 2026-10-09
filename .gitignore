@@ -1,0 +1,50 @@
+# Laravel .gitignore
+# Dependensi
+/vendor
+/node_modules
+/Homestead.json
+/Homestead.yaml
+/npm-debug.log
+/yarn-error.log
+/.fleet
+/.idea
+/.vscode
+
+# Environment (RAHASIA - jangan pernah di-commit)
+/.env
+/.env.backup
+/.env.production
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+
+# Log & cache
+/storage/*.key
+/storage/pail.log
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
+/storage/app/public/*
+!storage/framework/cache/.gitignore
+!storage/framework/sessions/.gitignore
+!storage/framework/views/.gitignore
+!storage/logs/.gitignore
+
+# Build
+/public/hot
+/public/storage
+/public/build
+/public/js
+/public/css
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local database dumps
+*.sql
+*.sqlite
