@@ -26,8 +26,8 @@ Setiap entri progress harus berisi:
 |----|----------------|--------|--------|----------|
 | S1-01 | Penyiapan repositori, lingkungan pengembangan, dan struktur proyek | `chore/project-setup` | Selesai - ready for review | Scaffold Laravel 13, `.env.example` MySQL Laragon, `.gitignore`, README setup. Issue #1 |
 | S1-02 | Skema basis data dan migrasi awal | `feature/database-schema` | Selesai - ready for review | 14 tabel + model Eloquent + relasi + factory + seeder. Issue #2 |
-| S1-03 | Autentikasi: masuk, keluar, dan atur ulang kata sandi | | Belum mulai | Issue #3 |
-| S1-04 | Hak akses berdasarkan empat peran | | Belum mulai | Issue #4 |
+| S1-03 | Autentikasi: masuk, keluar, dan atur ulang kata sandi | `feature/auth-roles` | Selesai - ready for review | Login/logout + lupa/atur ulang kata sandi + rate limit + cek akun aktif. Issue #3 |
+| S1-04 | Hak akses berdasarkan empat peran | `feature/auth-roles` | Selesai - ready for review | Middleware `role` + `active`, area per peran, dashboard per peran. Issue #4 |
 | S1-05 | Tata letak responsif dan komponen antarmuka dasar | | (Frontend) | Issue #5 |
 | S1-06 | Admin: pengelolaan pengguna dan data master | | Belum mulai | Issue #6 |
 | S1-07 | Mitra: profil dan publikasi peluang program | | Belum mulai | Issue #7 |
@@ -77,3 +77,25 @@ Setiap entri progress harus berisi:
     - Factory untuk semua model + `DatabaseSeeder` (1 admin, 2 dosen, 5 mahasiswa, 2 mitra, 3 program published + 1 draft, 8 pengajuan contoh tiap status).
     - Kuota program dijaga tidak minus (`unsignedInteger` + helper `sisaKuota()`).
   - Catatan: `php artisan migrate:fresh --seed` sukses dari nol; relasi diverifikasi via tinker. PR menuju `develop` (`Closes #2`).
+
+- **[S1-03] Autentikasi: masuk, keluar, dan atur ulang kata sandi** — Cabang: `feature/auth-roles`
+  - Status: Selesai - ready for review
+  - Progress:
+    - Controller `AuthenticatedSessionController` (masuk, keluar), `PasswordResetLinkController` (lupa kata sandi), `NewPasswordController` (atur ulang).
+    - `LoginRequest`: validasi + throttle 5 percobaan + pesan galat generik (tidak membocorkan email terdaftar/tidak) + cek `is_active`.
+    - Kata sandi ter-hash (`password` => `hashed`); sesi di-regenerate saat masuk & di-invalidasi saat keluar.
+    - **Redirect setelah masuk menyesuaikan peran** (`User::homeRouteName()`): admin → data pengguna, dosen → pengajuan, mitra → peluang, mahasiswa → peluang.
+    - Pesan validasi & autentikasi **berbahasa Indonesia** (`lang/id/auth.php`, `passwords.php`, `validation.php`).
+    - View `auth/login`, `auth/forgot-password`, `auth/reset-password` (Tailwind, responsif) + layout guest.
+  - Catatan: 8 feature test autentikasi lulus. PR `Closes #3`.
+
+- **[S1-04] Hak akses berdasarkan empat peran** — Cabang: `feature/auth-roles`
+  - Status: Selesai - ready for review
+  - Progress:
+    - Middleware `EnsureUserHasRole` (`role:admin,dosen,mitra,mahasiswa`) → 403 bila peran tidak berwenang.
+    - Middleware `EnsureUserIsActive` (`active`) → akun nonaktif dikeluarkan & diarahkan ke login.
+    - Policy per resource: `ProgramPolicy`, `PendaftaranPolicy` (kepemilikan data + peran, sesuai matriks §7.7).
+    - Halaman **Akun Saya** (`/profile`) untuk semua peran: ubah nama & kata sandi sendiri; **peran/status aktif tidak dapat diubah** dari form.
+    - Halaman galat ramah `resources/views/errors/403|404|419.blade.php` (tanpa stack trace).
+    - Dashboard menyesuaikan peran; grup rute area tiap peran (`/admin/*`, `/dosen/*`, `/mitra/*`, `/mahasiswa/*`).
+  - Catatan: 6 feature test profil + 5 test matriks akses lulus (total suite: 32 test, 93 assertion). PR `Closes #4`.

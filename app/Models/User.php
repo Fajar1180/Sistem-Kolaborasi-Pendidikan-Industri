@@ -74,4 +74,32 @@ class User extends Authenticatable
     {
         return $this->role === self::ROLE_ADMIN;
     }
+
+    public function isDosen(): bool
+    {
+        return $this->role === self::ROLE_DOSEN;
+    }
+
+    public function isMitra(): bool
+    {
+        return $this->role === self::ROLE_MITRA;
+    }
+
+    public function isMahasiswa(): bool
+    {
+        return $this->role === self::ROLE_MAHASISWA;
+    }
+
+    /**
+     * Halaman pendarat setelah masuk, disesuaikan dengan peran (FR-01).
+     */
+    public function homeRouteName(): string
+    {
+        return match ($this->role) {
+            self::ROLE_ADMIN => 'admin.users.index',
+            self::ROLE_DOSEN => 'dosen.pengajuan.index',
+            self::ROLE_MITRA => 'mitra.program.index',
+            default => 'mahasiswa.program.index',
+        };
+    }
 }
