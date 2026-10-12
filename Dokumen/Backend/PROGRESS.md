@@ -82,16 +82,20 @@ Setiap entri progress harus berisi:
   - Status: Selesai - ready for review
   - Progress:
     - Controller `AuthenticatedSessionController` (masuk, keluar), `PasswordResetLinkController` (lupa kata sandi), `NewPasswordController` (atur ulang).
-    - `LoginRequest` dengan validasi + rate limit 5 percobaan + cek `is_active` (akun nonaktif tidak bisa masuk).
-    - Kata sandi disimpan ter-hash (`password` => `hashed` pada model User).
+    - `LoginRequest`: validasi + throttle 5 percobaan + pesan galat generik (tidak membocorkan email terdaftar/tidak) + cek `is_active`.
+    - Kata sandi ter-hash (`password` => `hashed`); sesi di-regenerate saat masuk & di-invalidasi saat keluar.
+    - **Redirect setelah masuk menyesuaikan peran** (`User::homeRouteName()`): admin → data pengguna, dosen → pengajuan, mitra → peluang, mahasiswa → peluang.
+    - Pesan validasi & autentikasi **berbahasa Indonesia** (`lang/id/auth.php`, `passwords.php`, `validation.php`).
     - View `auth/login`, `auth/forgot-password`, `auth/reset-password` (Tailwind, responsif) + layout guest.
-  - Catatan: 3 feature test autentikasi & reset kata sandi lulus. PR `Closes #3`.
+  - Catatan: 8 feature test autentikasi lulus. PR `Closes #3`.
 
 - **[S1-04] Hak akses berdasarkan empat peran** — Cabang: `feature/auth-roles`
   - Status: Selesai - ready for review
   - Progress:
     - Middleware `EnsureUserHasRole` (`role:admin,dosen,mitra,mahasiswa`) → 403 bila peran tidak berwenang.
     - Middleware `EnsureUserIsActive` (`active`) → akun nonaktif dikeluarkan & diarahkan ke login.
-    - Dashboard menyesuaikan peran; rute contoh area tiap peran (`/admin/*`, `/dosen/*`, `/mitra/*`, `/mahasiswa/*`) siap diisi modul berikutnya.
-    - Redirect tamu ke `login`, pengguna yang sudah masuk ke `dashboard`.
-  - Catatan: 7 feature test hak akses lulus (`php artisan test`: 18 passed). PR `Closes #4`.
+    - Policy per resource: `ProgramPolicy`, `PendaftaranPolicy` (kepemilikan data + peran, sesuai matriks §7.7).
+    - Halaman **Akun Saya** (`/profile`) untuk semua peran: ubah nama & kata sandi sendiri; **peran/status aktif tidak dapat diubah** dari form.
+    - Halaman galat ramah `resources/views/errors/403|404|419.blade.php` (tanpa stack trace).
+    - Dashboard menyesuaikan peran; grup rute area tiap peran (`/admin/*`, `/dosen/*`, `/mitra/*`, `/mahasiswa/*`).
+  - Catatan: 6 feature test profil + 5 test matriks akses lulus (total suite: 32 test, 93 assertion). PR `Closes #4`.

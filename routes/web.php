@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
@@ -33,6 +34,10 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Halaman akun sendiri — semua peran (FR-02).
+    Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
 
     /*
     |----------------------------------------------------------------------

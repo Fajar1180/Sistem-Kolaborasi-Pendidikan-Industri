@@ -13,10 +13,11 @@
             <a href="{{ url('/') }}" class="font-semibold">{{ config('app.name') }}</a>
             @auth
                 <div class="flex items-center gap-4 text-sm">
-                    <span>
+                    <a href="{{ route('profile.edit') }}" class="hover:underline">
                         {{ auth()->user()->name }}
                         <span class="rounded bg-slate-200 px-2 py-0.5 text-xs uppercase">{{ auth()->user()->role }}</span>
-                    </span>
+                    </a>
+                    <a href="{{ route('dashboard') }}" class="text-slate-600 hover:underline">Dashboard</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="text-red-600 hover:underline">Keluar</button>
