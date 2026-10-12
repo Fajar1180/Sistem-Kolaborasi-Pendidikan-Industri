@@ -13,7 +13,7 @@ class ActivityLog extends Model
     protected $table = 'activity_logs';
 
     protected $fillable = [
-        'user_id', 'aksi', 'entitas', 'entitas_id', 'waktu',
+        'user_id', 'aksi', 'catatan', 'entitas', 'entitas_id', 'waktu',
     ];
 
     protected function casts(): array
@@ -26,5 +26,20 @@ class ActivityLog extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Catat aksi penting (siapa, apa, kapan — NFR-06).
+     */
+    public static function catat(string $aksi, ?Model $entitas = null, ?string $catatan = null): self
+    {
+        return static::create([
+            'user_id' => auth()->id(),
+            'aksi' => $aksi,
+            'catatan' => $catatan,
+            'entitas' => $entitas ? $entitas::class : null,
+            'entitas_id' => $entitas?->getKey(),
+            'waktu' => now(),
+        ]);
     }
 }

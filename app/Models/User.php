@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -10,12 +11,15 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
     public const ROLE_MAHASISWA = 'mahasiswa';
+
     public const ROLE_DOSEN = 'dosen';
+
     public const ROLE_MITRA = 'mitra';
+
     public const ROLE_ADMIN = 'admin';
 
     protected $fillable = [
