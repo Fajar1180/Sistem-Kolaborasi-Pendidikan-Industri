@@ -29,7 +29,7 @@ Setiap entri progress harus berisi:
 | S1-03 | Autentikasi: masuk, keluar, dan atur ulang kata sandi | `feature/auth-roles` | Selesai - ready for review | Login/logout + lupa/atur ulang kata sandi + rate limit + cek akun aktif. Issue #3 |
 | S1-04 | Hak akses berdasarkan empat peran | `feature/auth-roles` | Selesai - ready for review | Middleware `role` + `active`, area per peran, dashboard per peran. Issue #4 |
 | S1-05 | Tata letak responsif dan komponen antarmuka dasar | | (Frontend) | Issue #5 |
-| S1-06 | Admin: pengelolaan pengguna dan data master | | Belum mulai | Issue #6 |
+| S1-06 | Admin: pengelolaan pengguna dan data master | `feature/admin-users-master` | Selesai - ready for review | CRUD pengguna 4 peran + profil otomatis, aktif/nonaktif, impor CSV, data master Program Studi & Periode Akademik, activity log. Issue #6 |
 | S1-07 | Mitra: profil dan publikasi peluang program | | Belum mulai | Issue #7 |
 | S1-08 | Mahasiswa: melihat peluang dan mendaftar program | | Belum mulai | Issue #8 |
 | S1-09 | Mahasiswa: pengajuan penempatan | | Belum mulai | Issue #9 |
@@ -99,3 +99,16 @@ Setiap entri progress harus berisi:
     - Halaman galat ramah `resources/views/errors/403|404|419.blade.php` (tanpa stack trace).
     - Dashboard menyesuaikan peran; grup rute area tiap peran (`/admin/*`, `/dosen/*`, `/mitra/*`, `/mahasiswa/*`).
   - Catatan: 6 feature test profil + 5 test matriks akses lulus (total suite: 32 test, 93 assertion). PR `Closes #4`.
+
+- **[S1-06] Admin: pengelolaan pengguna dan data master** — Cabang: `feature/admin-users-master`
+  - Status: Selesai - ready for review
+  - Progress:
+    - **Pengguna (FR-14):** `/admin/users` — daftar dengan pencarian (nama/email) + filter peran & status, tambah, ubah, aktif/nonaktifkan (soft), dan hapus.
+    - **Profil otomatis:** trait `MembuatProfilPengguna` membuat/memperbarui baris `mahasiswas`/`dosens`/`mitras` sesuai peran yang dipilih, sehingga admin tidak membuat data ganda secara manual.
+    - **Validasi per peran:** NIM/prodi/angkatan wajib untuk mahasiswa, NIDN untuk dosen, nama perusahaan untuk mitra; `prodi` divalidasi terhadap data master `program_studis` bila sudah terisi.
+    - **Perlindungan data:** admin tidak dapat menonaktifkan/menghapus akunnya sendiri; akun yang sudah punya relasi (pendaftaran/program/notifikasi/activity log) hanya boleh dinonaktifkan, tidak dihapus (integritas data).
+    - **Impor CSV:** `/admin/import` — validasi header (`nama`, `email`, `role`), validasi per baris, satu transaksi `DB::transaction`, ringkasan hasil (berhasil/gagal + alasan per baris), template CSV dapat diunduh, kata sandi awal `password`.
+    - **Data master:** CRUD `program_studis` (kode unik, jenjang, aktif) dan `periode_akademiks` (rentang tanggal, hanya satu periode aktif).
+    - **Jejak audit (NFR-06):** kolom `catatan` pada `activity_logs` + helper `ActivityLog::catat()`; setiap aksi penting (buat/ubah/nonaktifkan/hapus pengguna, perubahan data master, impor) tercatat.
+    - **UI:** halaman Blade responsif + menu navigasi khusus admin (Pengguna, Program Studi, Periode Akademik, Impor CSV).
+  - Catatan: suite total 59 test / 184 assertion lulus (`php artisan test`); `migrate:fresh --seed` sukses; Pint bersih pada berkas yang dikerjakan. PR menuju `develop` (`Closes #6`).
