@@ -9,18 +9,27 @@
 /.fleet
 /.idea
 /.vscode
+/.cursor
+/.nova
+/.zed
+/.codex
+/.phpunit.cache
 
 # Environment (RAHASIA - jangan pernah di-commit)
 /.env
 /.env.backup
 /.env.production
 .phpunit.result.cache
+.phpactor.json
 Homestead.json
 Homestead.yaml
 auth.json
+_ide_helper.php
+.phpstorm.meta.php
 
 # Log & cache
 /storage/*.key
+/storage/pail
 /storage/pail.log
 /storage/framework/cache/data/*
 /storage/framework/sessions/*
@@ -38,6 +47,7 @@ auth.json
 /public/build
 /public/js
 /public/css
+/public/fonts-manifest.dev.json
 *.log
 
 # OS

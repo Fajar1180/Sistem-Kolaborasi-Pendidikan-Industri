@@ -36,14 +36,14 @@ Pengelolaan program mahasiswa (kerja praktik, magang, proyek kolaborasi, kunjung
 git clone https://github.com/Fajar1180/Sistem-Kolaborasi-Pendidikan-Industri.git
 cd Sistem-Kolaborasi-Pendidikan-Industri
 
-# 2. (Ketika struktur Laravel sudah ada) Install dependensi
+# 2. Install dependensi (struktur Laravel sudah ada di repo)
 composer install
 npm install
 
 # 3. Siapkan environment lokal
 cp .env.example .env
 php artisan key:generate
-# lalu isi kredensial database di .env (MySQL Laragon)
+# lalu sesuaikan kredensial database di .env (MySQL Laragon)
 
 # 4. Migrasi + seeder data dummy (mahasiswa, dosen, admin, mitra)
 php artisan migrate --seed
@@ -54,6 +54,34 @@ php artisan serve
 
 > **Penting:** setiap programmer WAJIB menjalankan `php artisan migrate --seed` setelah `git pull` agar mendapat data sampel terbaru untuk testing — tidak perlu input manual.
 
+### Setup MySQL di Laragon
+
+1. Jalankan Laragon → **Start All** (Apache/Nginx + MySQL).
+2. Buat database lokal (default proyek: `skp_db`):
+   ```bash
+   mysql -u root -e "CREATE DATABASE IF NOT EXISTS skp_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+   ```
+3. Samakan nilai berikut di `.env` (lihat juga `.env.example`):
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=skp_db
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
+4. Pastikan `php artisan migrate --seed` berhasil. Untuk mengulang dari nol: `php artisan migrate:fresh --seed`.
+
+### Akun Hasil Seeder (password semua: `password`)
+
+| Peran | Email |
+|---|---|
+| Admin | `admin@skp.test` |
+| Dosen | `dosen1@skp.test`, `dosen2@skp.test` |
+| Mahasiswa | `mhs1@skp.test` … `mhs5@skp.test` |
+| Mitra | `mitra1@skp.test`, `mitra2@skp.test` |
+
+
 ## Struktur Dokumen
 
 ```
@@ -62,6 +90,10 @@ php artisan serve
 ├── Dokumen/
 │   ├── Frontend/PROGRESS.md                       # Progress Frontend
 │   └── Backend/PROGRESS.md                        # Progress Backend
+├── app/Models/                                    # Model Eloquent (User, Mahasiswa, Dosen, Mitra, Program, Pendaftaran, ...)
+├── database/migrations/                           # Skema basis data (users, mahasiswas, programs, pendaftarans, ...)
+├── database/seeders/                              # Seeder data sampel tiap peran
+├── routes/                                        # Rute web/api
 └── README.md                                      # File ini
 ```
 
