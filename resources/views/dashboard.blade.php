@@ -12,7 +12,19 @@
         @if ($user->role === 'admin')
             <a href="{{ route('admin.users.index') }}" class="rounded-lg bg-white p-5 shadow-sm hover:shadow">
                 <h3 class="font-medium">Pengelolaan Pengguna</h3>
-                <p class="mt-1 text-sm text-slate-500">Kelola akun & data master (S1-06).</p>
+                <p class="mt-1 text-sm text-slate-500">Tambah, ubah, dan nonaktifkan akun empat peran (S1-06).</p>
+            </a>
+            <a href="{{ route('admin.master.program-studi.index') }}" class="rounded-lg bg-white p-5 shadow-sm hover:shadow">
+                <h3 class="font-medium">Program Studi</h3>
+                <p class="mt-1 text-sm text-slate-500">Data master program studi (S1-06).</p>
+            </a>
+            <a href="{{ route('admin.master.periode-akademik.index') }}" class="rounded-lg bg-white p-5 shadow-sm hover:shadow">
+                <h3 class="font-medium">Periode Akademik</h3>
+                <p class="mt-1 text-sm text-slate-500">Data master periode akademik (S1-06).</p>
+            </a>
+            <a href="{{ route('admin.import.index') }}" class="rounded-lg bg-white p-5 shadow-sm hover:shadow">
+                <h3 class="font-medium">Impor Data CSV</h3>
+                <p class="mt-1 text-sm text-slate-500">Impor data awal mahasiswa/dosen/mitra (S1-06).</p>
             </a>
         @elseif ($user->role === 'dosen')
             <a href="{{ route('dosen.pengajuan.index') }}" class="rounded-lg bg-white p-5 shadow-sm hover:shadow">

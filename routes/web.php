@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\PeriodeAkademikController;
+use App\Http\Controllers\Admin\ProgramStudiController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\UserImportController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
@@ -41,13 +45,40 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     /*
     |----------------------------------------------------------------------
-    | Area per peran — FR-02 (matriks hak akses PRD 7.7)
+    | Area Admin — FR-14 (S1-06): pengguna & data master
     |----------------------------------------------------------------------
     */
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
-        Route::view('users', 'placeholder', ['judul' => 'Pengelolaan Pengguna & Data Master', 'ref' => 'S1-06'])->name('users.index');
+        Route::get('users', [UserController::class, 'index'])->name('users.index');
+        Route::get('users/create', [UserController::class, 'create'])->name('users.create');
+        Route::post('users', [UserController::class, 'store'])->name('users.store');
+        Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+        Route::put('users/{user}', [UserController::class, 'update'])->name('users.update');
+        Route::patch('users/{user}/toggle', [UserController::class, 'toggleActive'])->name('users.toggle');
+        Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+
+        // Impor CSV data awal.
+        Route::get('import', [UserImportController::class, 'index'])->name('import.index');
+        Route::post('import', [UserImportController::class, 'store'])->name('import.store');
+        Route::get('import/template', [UserImportController::class, 'template'])->name('import.template');
+
+        // Data master.
+        Route::get('master/program-studi', [ProgramStudiController::class, 'index'])->name('master.program-studi.index');
+        Route::post('master/program-studi', [ProgramStudiController::class, 'store'])->name('master.program-studi.store');
+        Route::put('master/program-studi/{program_studi}', [ProgramStudiController::class, 'update'])->name('master.program-studi.update');
+        Route::delete('master/program-studi/{program_studi}', [ProgramStudiController::class, 'destroy'])->name('master.program-studi.destroy');
+
+        Route::get('master/periode-akademik', [PeriodeAkademikController::class, 'index'])->name('master.periode-akademik.index');
+        Route::post('master/periode-akademik', [PeriodeAkademikController::class, 'store'])->name('master.periode-akademik.store');
+        Route::put('master/periode-akademik/{periode_akademik}', [PeriodeAkademikController::class, 'update'])->name('master.periode-akademik.update');
+        Route::delete('master/periode-akademik/{periode_akademik}', [PeriodeAkademikController::class, 'destroy'])->name('master.periode-akademik.destroy');
     });
 
+    /*
+    |----------------------------------------------------------------------
+    | Area per peran lain — FR-02 (matriks hak akses PRD 7.7)
+    |----------------------------------------------------------------------
+    */
     Route::middleware('role:dosen')->prefix('dosen')->name('dosen.')->group(function () {
         Route::view('pengajuan', 'placeholder', ['judul' => 'Persetujuan Pengajuan Penempatan', 'ref' => 'S2-01'])->name('pengajuan.index');
     });
