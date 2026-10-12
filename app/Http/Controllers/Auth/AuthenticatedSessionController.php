@@ -28,7 +28,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard'));
+        // Redirect sesuai peran (FR-01).
+        return redirect()->intended(route($request->user()->homeRouteName()));
     }
 
     /**
