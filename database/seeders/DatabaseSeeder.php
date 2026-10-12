@@ -14,7 +14,9 @@ use App\Models\Notifikasi;
 use App\Models\Pendaftaran;
 use App\Models\PenilaianDosen;
 use App\Models\PenilaianMitra;
+use App\Models\PeriodeAkademik;
 use App\Models\Program;
+use App\Models\ProgramStudi;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -23,6 +25,22 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // ---- Data master (S1-06) ----
+        foreach ([
+            ['kode' => 'TI', 'nama' => 'Teknik Informatika', 'jenjang' => 'S1'],
+            ['kode' => 'SI', 'nama' => 'Sistem Informasi', 'jenjang' => 'S1'],
+        ] as $prodi) {
+            ProgramStudi::create($prodi + ['is_aktif' => true]);
+        }
+
+        PeriodeAkademik::create([
+            'kode' => '2025/2026-1',
+            'nama' => '2025/2026 Ganjil',
+            'tanggal_mulai' => now()->startOfMonth(),
+            'tanggal_selesai' => now()->addMonths(5),
+            'is_aktif' => true,
+        ]);
+
         // ---- Akun tetap (semua password: "password") ----
         $admin = User::create([
             'name' => 'Admin Sistem',
