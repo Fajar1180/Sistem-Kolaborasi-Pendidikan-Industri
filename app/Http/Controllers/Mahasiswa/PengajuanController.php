@@ -6,6 +6,7 @@ use App\Events\PendaftaranStatusBerubah;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Mahasiswa\SimpanPengajuanRequest;
 use App\Models\ActivityLog;
+use App\Models\Dosen;
 use App\Models\Pendaftaran;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
@@ -100,6 +101,13 @@ class PengajuanController extends Controller
             'status' => Pendaftaran::STATUS_DIAJUKAN,
             'diajukan_at' => now(),
         ]);
+
+        // S2-01 — Tugaskan dosen pembimbing (utamakan prodi sama, beban paling sedikit).
+        if (! $pendaftaran->dosen_pembimbing_id) {
+            if ($dosen = Dosen::pilihPembimbing($pendaftaran->mahasiswa?->prodi)) {
+                $pendaftaran->update(['dosen_pembimbing_id' => $dosen->id]);
+            }
+        }
 
         ActivityLog::catat('ajukan_pendaftaran', $pendaftaran, "Mengajukan penempatan: {$pendaftaran->program?->judul}");
         PendaftaranStatusBerubah::dispatch($pendaftaran, Pendaftaran::STATUS_DIAJUKAN, $statusLama);

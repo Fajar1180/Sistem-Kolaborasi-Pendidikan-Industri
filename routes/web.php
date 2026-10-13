@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\Dosen\PengajuanDosenController;
 use App\Http\Controllers\Mahasiswa\PendaftaranMahasiswaController;
 use App\Http\Controllers\Mahasiswa\PengajuanController;
 use App\Http\Controllers\Mahasiswa\ProgramKatalogController;
@@ -81,6 +82,10 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::post('master/periode-akademik', [PeriodeAkademikController::class, 'store'])->name('master.periode-akademik.store');
         Route::put('master/periode-akademik/{periode_akademik}', [PeriodeAkademikController::class, 'update'])->name('master.periode-akademik.update');
         Route::delete('master/periode-akademik/{periode_akademik}', [PeriodeAkademikController::class, 'destroy'])->name('master.periode-akademik.destroy');
+
+        // Pengawasan seluruh pengajuan penempatan (hanya-baca) — S2-01/S2-08.
+        Route::get('pengajuan', [PengajuanDosenController::class, 'index'])->name('pengajuan.index');
+        Route::get('pengajuan/{pendaftaran}', [PengajuanDosenController::class, 'show'])->name('pengajuan.show');
     });
 
     /*
@@ -89,7 +94,12 @@ Route::middleware(['auth', 'active'])->group(function () {
     |----------------------------------------------------------------------
     */
     Route::middleware('role:dosen')->prefix('dosen')->name('dosen.')->group(function () {
-        Route::view('pengajuan', 'placeholder', ['judul' => 'Persetujuan Pengajuan Penempatan', 'ref' => 'S2-01'])->name('pengajuan.index');
+        // Persetujuan pengajuan penempatan (FR-08) — S2-01.
+        Route::get('pengajuan', [PengajuanDosenController::class, 'index'])->name('pengajuan.index');
+        Route::get('pengajuan/{pendaftaran}', [PengajuanDosenController::class, 'show'])->name('pengajuan.show');
+        Route::post('pengajuan/{pendaftaran}/setujui', [PengajuanDosenController::class, 'setujui'])->name('pengajuan.setujui');
+        Route::post('pengajuan/{pendaftaran}/tolak', [PengajuanDosenController::class, 'tolak'])->name('pengajuan.tolak');
+        Route::post('pengajuan/{pendaftaran}/revisi', [PengajuanDosenController::class, 'revisi'])->name('pengajuan.revisi');
     });
 
     Route::middleware('role:mitra')->prefix('mitra')->name('mitra.')->group(function () {

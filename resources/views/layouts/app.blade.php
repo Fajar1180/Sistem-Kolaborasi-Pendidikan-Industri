@@ -33,6 +33,13 @@
                         <a href="{{ route('admin.master.program-studi.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Program Studi</a>
                         <a href="{{ route('admin.master.periode-akademik.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Periode Akademik</a>
                         <a href="{{ route('admin.import.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Impor CSV</a>
+                        <a href="{{ route('admin.pengajuan.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Pengajuan Masuk</a>
+                    </div>
+                </div>
+            @elseif (auth()->user()->isDosen())
+                <div class="border-t border-slate-200 bg-slate-50">
+                    <div class="mx-auto flex max-w-6xl flex-wrap gap-4 px-4 py-2 text-sm">
+                        <a href="{{ route('dosen.pengajuan.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Pengajuan Masuk</a>
                     </div>
                 </div>
             @elseif (auth()->user()->isMitra())

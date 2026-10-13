@@ -8,7 +8,7 @@
     <div class="mt-3 rounded-lg bg-white p-6 shadow-sm">
         <div class="flex flex-wrap items-center justify-between gap-2">
             <h2 class="text-xl font-semibold">Pengajuan Penempatan</h2>
-            @include('mahasiswa._status_badge', ['pendaftaran' => $pendaftaran])
+            @include('partials.status_badge', ['pendaftaran' => $pendaftaran])
         </div>
         <p class="mt-1 text-sm text-slate-700">{{ $pendaftaran->program->judul }}</p>
         <p class="text-sm text-slate-500">Mitra: {{ $pendaftaran->program->mitra?->nama_perusahaan ?? 'Mitra' }}</p>

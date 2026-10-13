@@ -41,7 +41,7 @@ Setiap entri progress harus berisi:
 
 | ID | Item Pekerjaan | Branch | Status | Progress |
 |----|----------------|--------|--------|----------|
-| S2-01 | Dosen: persetujuan pengajuan penempatan | | Belum mulai | Issue #11 |
+| S2-01 | Dosen: persetujuan pengajuan penempatan | `feature/dosen-persetujuan` | Selesai - ready for review | Antrean pengajuan untuk dosen pembimbing (hanya milik sendiri, filter status) + halaman detail; aksi setujui/tolak/revisi (catatan wajib untuk tolak/revisi) dengan transisi status §7.5, jejak audit (NFR-06), dan notifikasi mahasiswa; penugasan dosen pembimbing otomatis saat diajukan; admin melihat semua (hanya-baca, §7.7). Issue #11 |
 | S2-02 | Mitra: seleksi dan verifikasi peserta | | Belum mulai | Issue #12 |
 | S2-03 | Mahasiswa: pencatatan kegiatan | | Belum mulai | Issue #13 |
 | S2-04 | Mahasiswa: pengelolaan dokumen dan pengumpulan laporan | | Belum mulai | Issue #15 |
@@ -149,3 +149,19 @@ Setiap entri progress harus berisi:
     - **Jejak audit & notifikasi:** aksi `simpan_pengajuan` & `ajukan_pendaftaran` tercatat di `activity_logs`; event `PendaftaranStatusBerubah` dipicu setiap perubahan status (konsumsi notifikasi S2-07).
     - **Perbaikan kecil:** flash `session('error')` kini tampil di layout (sebelumnya hanya `status`).
   - Catatan: 14 feature test baru (form/draf/berkas/hapus/ajukan/revisi + akses unduh privat: pemilik/mitra/dosen/admin vs lain) lulus; suite total 91 test / 298 assertion. Pint bersih. PR menuju `feature/mahasiswa-daftar` (ditumpuk; `Closes #9`) — otomatis berpindah base ke `main` saat PR #28 di-merge.
+
+## 2026-10-13
+
+- **[Perbaikan dokumen] Sisa penanda konflik Git pada `Dokumen/Backend/PROGRESS.md`** — menghapus penanda `<<<<<<<` / `=======` / `>>>>>>>` yang tertinggal dari merge PR #28 di `main` dan mengembalikan baris tabel S1-07/S1-08/S1-09 yang hilang. Tidak ada perubahan kode.
+
+- **[S2-01] Dosen: persetujuan pengajuan penempatan** — Cabang: `feature/dosen-persetujuan`
+  - Status: Selesai - ready for review
+  - Progress:
+    - **Antrean pengajuan (`/dosen/pengajuan`):** dosen pembimbing hanya melihat pengajuan yang **ditujukan kepadanya** (`dosen_pembimbing_id`); filter kategori (menunggu/perlu_revisi/riwayat). Akun dosen tanpa profil `dosens` diberi pesan pengarahan (degradasi anggun), konsisten S1-07/S1-08.
+    - **Detail & keputusan (`/dosen/pengajuan/{pendaftaran}`):** menampilkan identitas mahasiswa/prodi, mitra & program, status, catatan mahasiswa, dan berkas lampiran (tautan unduh ber-policy). Aksi: **Setujui**, **Tolak**, **Revisi**.
+    - **Transisi status (§7.5):** setujui → `disetujui_dosen` (`disetujui_dosen_at`), tolak → `ditolak`, revisi → `perlu_revisi`. `catatan` **wajib** untuk tolak & revisi ("Alasan penolakan wajib diisi." / "Catatan revisi wajib diisi."). Aksi idempoten — pengajuan yang sudah diputus tidak diproses ulang.
+    - **Kepemilikan & akses:** `PendaftaranPolicy@putuskanDosen` — hanya dosen pembimbing terkait dan hanya saat status menunggu keputusan (`diajukan`/`perlu_revisi`); dosen lain 403. Admin hanya dapat **melihat** seluruh pengajuan (`/admin/pengajuan`, hanya-baca) sesuai matriks §7.7 — tidak berhak memutuskan.
+    - **Penugasan pembimbing:** saat mahasiswa menekan "Ajukan Penempatan", sistem menugaskan dosen pembimbing otomatis (`Dosen::pilihPembimbing()` — utamakan prodi sama, lalu beban bimbingan paling sedikit).
+    - **Jejak audit & notifikasi:** aksi `setujui_pengajuan`/`tolak_pengajuan`/`minta_revisi_pengajuan` tercatat di `activity_logs` (NFR-06); setiap keputusan membuat `Notifikasi` untuk mahasiswa dan memicu event `PendaftaranStatusBerubah` (dikonsumsi email pada S2-07).
+    - **UI:** badge status bersama `resources/views/partials/status_badge.blade.php` (8 status §7.5) dipakai ulang di area mahasiswa; menu navigasi dosen & admin ditambah.
+  - Catatan: 13 feature test baru (`tests/Feature/Dosen/PersetujuanPengajuanTest.php`) lulus; suite total 123 test / 425 assertion. Pint bersih. PR menuju `main` (`Closes #11`).

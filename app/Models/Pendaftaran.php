@@ -36,6 +36,11 @@ class Pendaftaran extends Model
         self::STATUS_DITERIMA_MITRA, self::STATUS_BERJALAN, self::STATUS_SELESAI,
     ];
 
+    /**
+     * Status yang menunggu keputusan dosen pembimbing (§7.5) — S2-01.
+     */
+    public const STATUS_DIPUTUS_DOSEN = [self::STATUS_DIAJUKAN, self::STATUS_PERLU_REVISI];
+
     protected $fillable = [
         'mahasiswa_id', 'program_id', 'dosen_pembimbing_id', 'status', 'catatan',
         'catatan_mahasiswa',
@@ -129,5 +134,13 @@ class Pendaftaran extends Model
     public function bisaDieditMahasiswa(): bool
     {
         return in_array($this->status, [self::STATUS_DRAF, self::STATUS_PERLU_REVISI], true);
+    }
+
+    /**
+     * Menunggu keputusan dosen pembimbing? (S2-01)
+     */
+    public function bisaDiputusDosen(): bool
+    {
+        return in_array($this->status, self::STATUS_DIPUTUS_DOSEN, true);
     }
 }

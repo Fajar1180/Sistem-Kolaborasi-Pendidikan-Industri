@@ -155,13 +155,17 @@ class DatabaseSeeder extends Seeder
                 'catatan' => 'Contoh pengajuan status '.$status.'.',
             ];
 
+            // S2-01 — semua pengajuan yang sudah diajukan punya dosen pembimbing.
+            if ($status !== Pendaftaran::STATUS_DRAF) {
+                $attributes['dosen_pembimbing_id'] = $dosenUsers[$i % $dosenUsers->count()]->id;
+            }
+
             if (in_array($status, [
                 Pendaftaran::STATUS_DISETUJUI_DOSEN,
                 Pendaftaran::STATUS_DITERIMA_MITRA,
                 Pendaftaran::STATUS_BERJALAN,
                 Pendaftaran::STATUS_SELESAI,
             ], true)) {
-                $attributes['dosen_pembimbing_id'] = $dosenUsers[$i % $dosenUsers->count()]->id;
                 $attributes['disetujui_dosen_at'] = now()->subDays(10);
             }
 
