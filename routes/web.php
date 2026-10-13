@@ -9,6 +9,8 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\Dosen\BimbinganController;
+use App\Http\Controllers\Dosen\PenilaianController;
 use App\Http\Controllers\Dosen\PengajuanDosenController;
 use App\Http\Controllers\Mahasiswa\KegiatanController;
 use App\Http\Controllers\Mahasiswa\DokumenMahasiswaController;
@@ -104,6 +106,17 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::post('pengajuan/{pendaftaran}/setujui', [PengajuanDosenController::class, 'setujui'])->name('pengajuan.setujui');
         Route::post('pengajuan/{pendaftaran}/tolak', [PengajuanDosenController::class, 'tolak'])->name('pengajuan.tolak');
         Route::post('pengajuan/{pendaftaran}/revisi', [PengajuanDosenController::class, 'revisi'])->name('pengajuan.revisi');
+
+        // Bimbingan mahasiswa (FR-09) — S2-05.
+        Route::get('bimbingan', [BimbinganController::class, 'index'])->name('bimbingan.index');
+        Route::get('bimbingan/{pendaftaran}', [BimbinganController::class, 'show'])->name('bimbingan.show');
+        Route::post('bimbingan/{pendaftaran}', [BimbinganController::class, 'store'])->name('bimbingan.store');
+        Route::put('bimbingan/{pendaftaran}/{bimbingan}', [BimbinganController::class, 'update'])->name('bimbingan.update');
+        Route::delete('bimbingan/{pendaftaran}/{bimbingan}', [BimbinganController::class, 'destroy'])->name('bimbingan.destroy');
+
+        // Penilaian rubrik + finalisasi (FR-10) — S2-05.
+        Route::get('penilaian/{pendaftaran}', [PenilaianController::class, 'edit'])->name('penilaian.edit');
+        Route::put('penilaian/{pendaftaran}', [PenilaianController::class, 'update'])->name('penilaian.update');
     });
 
     Route::middleware('role:mitra')->prefix('mitra')->name('mitra.')->group(function () {

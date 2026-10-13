@@ -13,13 +13,15 @@ class PenilaianMitra extends Model
     protected $table = 'penilaian_mitras';
 
     protected $fillable = [
-        'pendaftaran_id', 'komponen', 'nilai',
+        'pendaftaran_id', 'komponen', 'nilai', 'is_final',
     ];
 
     protected function casts(): array
     {
         return [
             'nilai' => 'integer',
+            'is_final' => 'boolean',
+            'difinalisasi_at' => 'datetime',
         ];
     }
 

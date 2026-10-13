@@ -40,6 +40,7 @@
                 <div class="border-t border-slate-200 bg-slate-50">
                     <div class="mx-auto flex max-w-6xl flex-wrap gap-4 px-4 py-2 text-sm">
                         <a href="{{ route('dosen.pengajuan.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Pengajuan Masuk</a>
+                        <a href="{{ route('dosen.bimbingan.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Bimbingan</a>
                     </div>
                 </div>
             @elseif (auth()->user()->isMitra())
