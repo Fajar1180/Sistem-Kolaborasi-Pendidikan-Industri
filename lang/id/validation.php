@@ -8,6 +8,7 @@ return [
     'email' => ':attribute harus berupa alamat email yang valid.',
     'exists' => ':attribute yang dipilih tidak valid.',
     'file' => ':attribute harus berupa berkas.',
+    'image' => ':attribute harus berupa gambar.',
     'in' => ':attribute yang dipilih tidak valid.',
     'integer' => ':attribute harus berupa bilangan bulat.',
     'mimes' => ':attribute harus berupa berkas berjenis: :values.',
@@ -50,5 +51,10 @@ return [
         'tanggal_mulai' => 'tanggal mulai',
         'tanggal_selesai' => 'tanggal selesai',
         'file' => 'berkas CSV',
+        'judul' => 'judul',
+        'jenis' => 'jenis program',
+        'syarat' => 'syarat',
+        'kuota' => 'kuota',
+        'logo' => 'logo',
     ],
 ];
