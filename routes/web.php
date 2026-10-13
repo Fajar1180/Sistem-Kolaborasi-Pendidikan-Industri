@@ -8,7 +8,9 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DokumenController;
 use App\Http\Controllers\Mahasiswa\PendaftaranMahasiswaController;
+use App\Http\Controllers\Mahasiswa\PengajuanController;
 use App\Http\Controllers\Mahasiswa\ProgramKatalogController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -44,6 +46,9 @@ Route::middleware(['auth', 'active'])->group(function () {
     // Halaman akun sendiri — semua peran (FR-02).
     Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    // Unduh berkas pengajuan dari storage privat (NFR-08) — S1-09.
+    Route::get('dokumen/{dokumen}', [DokumenController::class, 'unduh'])->name('dokumen.unduh');
 
     /*
     |----------------------------------------------------------------------
@@ -102,5 +107,10 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('pendaftaran', [PendaftaranMahasiswaController::class, 'index'])->name('pendaftaran.index');
         Route::get('pendaftaran/{pendaftaran}', [PendaftaranMahasiswaController::class, 'show'])->name('pendaftaran.show');
         Route::delete('pendaftaran/{pendaftaran}', [PendaftaranMahasiswaController::class, 'destroy'])->name('pendaftaran.destroy');
+
+        // Pengajuan penempatan: isi formulir + lampiran berkas (FR-04) — S1-09.
+        Route::get('pendaftaran/{pendaftaran}/pengajuan', [PengajuanController::class, 'edit'])->name('pengajuan.edit');
+        Route::put('pendaftaran/{pendaftaran}/pengajuan', [PengajuanController::class, 'update'])->name('pengajuan.update');
+        Route::post('pendaftaran/{pendaftaran}/ajukan', [PengajuanController::class, 'ajukan'])->name('pengajuan.ajukan');
     });
 });

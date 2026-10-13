@@ -36,17 +36,17 @@ class PendaftaranMahasiswaTest extends TestCase
             ->assertSee('Konfirmasi Pendaftaran')
             ->assertSee('Magang UI/UX');
 
-        $this->actingAs($mahasiswa->user)->post('/mahasiswa/program/'.$program->id.'/daftar')
-            ->assertRedirect(route('mahasiswa.pendaftaran.index'));
+        $response = $this->actingAs($mahasiswa->user)->post('/mahasiswa/program/'.$program->id.'/daftar');
+        $response->assertRedirect(route('mahasiswa.pengajuan.edit', Pendaftaran::firstOrFail()));
 
         $this->assertDatabaseHas('pendaftarans', [
             'mahasiswa_id' => $mahasiswa->id,
             'program_id' => $program->id,
-            'status' => 'diajukan',
+            'status' => 'draf',
         ]);
 
         $pendaftaran = Pendaftaran::firstOrFail();
-        $this->assertNotNull($pendaftaran->diajukan_at);
+        $this->assertNull($pendaftaran->diajukan_at);
         $this->assertDatabaseHas('activity_logs', ['aksi' => 'daftar_program', 'entitas_id' => $pendaftaran->id]);
     }
 

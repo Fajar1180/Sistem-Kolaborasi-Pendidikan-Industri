@@ -23,6 +23,39 @@
             </div>
         </dl>
 
+        @if ($pendaftaran->catatan_mahasiswa)
+            <div class="mt-4 rounded-lg bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                <span class="font-medium text-slate-700">Catatan Anda:</span> {{ $pendaftaran->catatan_mahasiswa }}
+            </div>
+        @endif
+
+        @if (in_array($pendaftaran->status, ['perlu_revisi', 'ditolak'], true) && $pendaftaran->catatan)
+            <div class="mt-4 rounded-lg bg-amber-100 px-4 py-3 text-sm text-amber-900">
+                <span class="font-medium">Catatan reviewer:</span> {{ $pendaftaran->catatan }}
+            </div>
+        @endif
+
+        @if ($pendaftaran->dokumens->isNotEmpty())
+            <div class="mt-4">
+                <span class="block text-sm font-medium text-slate-700">Berkas Lampiran</span>
+                <ul class="mt-2 divide-y divide-slate-100 rounded border border-slate-200">
+                    @foreach ($pendaftaran->dokumens as $dokumen)
+                        <li class="flex items-center gap-2 px-3 py-2 text-sm">
+                            <a href="{{ route('dokumen.unduh', $dokumen) }}" class="text-blue-600 hover:underline">{{ $dokumen->nama }}</a>
+                            <span class="text-xs uppercase text-slate-400">{{ $dokumen->tipe }}</span>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @if ($pendaftaran->bisaDieditMahasiswa())
+            <a href="{{ route('mahasiswa.pengajuan.edit', $pendaftaran) }}"
+               class="mt-5 inline-block rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+                {{ $pendaftaran->status === 'draf' ? 'Lengkapi Pengajuan' : 'Ubah Pengajuan (Revisi)' }}
+            </a>
+        @endif
+
         @if ($pendaftaran->bisaDibatalkan())
             <form method="POST" action="{{ route('mahasiswa.pendaftaran.destroy', $pendaftaran) }}" class="mt-5"
                   onsubmit="return confirm('Batalkan pendaftaran ini?');">

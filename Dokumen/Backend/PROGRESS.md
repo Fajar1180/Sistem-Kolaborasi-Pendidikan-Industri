@@ -32,7 +32,7 @@ Setiap entri progress harus berisi:
 | S1-06 | Admin: pengelolaan pengguna dan data master | `feature/admin-users-master` | Selesai - ready for review | CRUD pengguna 4 peran + profil otomatis, aktif/nonaktif, impor CSV, data master Program Studi & Periode Akademik, activity log. Issue #6 |
 | S1-07 | Mitra: profil dan publikasi peluang program | | Belum mulai | Issue #7 |
 | S1-08 | Mahasiswa: melihat peluang dan mendaftar program | `feature/mahasiswa-daftar` | Selesai - ready for review | Katalog peluang published + pencarian (judul/mitra) + filter jenis/periode + pagination, detail program, aksi daftar (cegah duplikat & kuota penuh/closed), "Pendaftaran Saya" + badge status, batalkan pendaftaran. Issue #8 |
-| S1-09 | Mahasiswa: pengajuan penempatan | | Belum mulai | Issue #9 |
+| S1-09 | Mahasiswa: pengajuan penempatan | `feature/pengajuan-penempatan` | Selesai - ready for review | Form pengajuan (catatan + lampiran berkas PDF/JPG/PNG/DOCX maks 5 MB ke storage privat), simpan draf, ajukan (draf/perlu_revisi → diajukan), revisi & ajukan ulang, unduh berkas ber-policy (NFR-08), activity log + event notifikasi. Status awal pendaftaran direfaktor jadi `draf` sesuai §7.5. Issue #9 |
 | S1-10 | Uji fungsi Sprint 1 dan dokumentasi | | (QA) | Issue #10 |
 
 ---
@@ -125,3 +125,15 @@ Setiap entri progress harus berisi:
     - **Jejak audit (NFR-06):** aksi `daftar_program` & `batal_pendaftaran` tercatat di `activity_logs`.
     - **Ketahanan:** akun mahasiswa tanpa profil `mahasiswas` tetap dapat membuka katalog & halaman "Pendaftaran Saya" (degradasi anggun, bukan 403) — konsisten dengan perlakuan mitra di S1-07.
   - Catatan: 18 feature test baru (katalog 8 + pendaftaran 10) lulus; suite total 77 test / 251 assertion. Pint bersih. PR menuju `main` (`Closes #8`) — `develop` sudah dihapus setelah rilis Sprint 1 (#26). Catatan integrasi: PR ini berpotensi sedikit bentrok di `routes/web.php` & `layouts/app.blade.php` dengan PR #27 (S1-07) karena sama-sama mengganti blok per-peran yang berdekatan; resolusi trivial (gabung dua blok per peran).
+
+- **[S1-09] Mahasiswa: pengajuan penempatan** — Cabang: `feature/pengajuan-penempatan` (ditumpuk di atas `feature/mahasiswa-daftar` / PR #28 yang belum di-merge)
+  - Status: Selesai - ready for review
+  - Progress:
+    - **Form pengajuan (`/mahasiswa/pendaftaran/{pendaftaran}/pengajuan`):** mahasiswa mengisi **catatan/motivasi** dan **melampirkan berkas** (PDF/JPG/PNG/DOCX, maks 5 MB per berkas, maks 5 berkas) — isian ditentukan SA.
+    - **Refaktor status awal (§7.5):** "Daftar program" (S1-08) kini membuat pendaftaran berstatus **`draf`** (bukan `diajukan`); mahasiswa melengkapi formulir lalu menekan **Ajukan Penempatan** (`draf`/`perlu_revisi` → `diajukan`, `diajukan_at` tercatat). Status terkunci dari mahasiswa setelah diajukan.
+    - **Ubah & ajukan ulang:** selama status `draf`/`perlu_revisi` (`Pendaftaran::bisaDieditMahasiswa()`) formulir dapat disimpan/diubah; setelah `diajukan` tidak dapat diubah.
+    - **Revisi dosen:** status `perlu_revisi` menampilkan catatan reviewer (`pendaftarans.catatan`) dan mengizinkan perbaikan + ajukan ulang; kolom baru `catatan_mahasiswa` menyimpan catatan mahasiswa.
+    - **Berkas privat (NFR-08):** berkas disimpan di disk `local` (`storage/app/private`, tidak ter-serve web); unduhan melalui `DokumenController` yang dijaga `DokumenPolicy` — hanya **pemilik, dosen pembimbing terkait, mitra penyelenggara, dan admin** (peran lain 403).
+    - **Jejak audit & notifikasi:** aksi `simpan_pengajuan` & `ajukan_pendaftaran` tercatat di `activity_logs`; event `PendaftaranStatusBerubah` dipicu setiap perubahan status (konsumsi notifikasi S2-07).
+    - **Perbaikan kecil:** flash `session('error')` kini tampil di layout (sebelumnya hanya `status`).
+  - Catatan: 14 feature test baru (form/draf/berkas/hapus/ajukan/revisi + akses unduh privat: pemilik/mitra/dosen/admin vs lain) lulus; suite total 91 test / 298 assertion. Pint bersih. PR menuju `feature/mahasiswa-daftar` (ditumpuk; `Closes #9`) — otomatis berpindah base ke `main` saat PR #28 di-merge.
