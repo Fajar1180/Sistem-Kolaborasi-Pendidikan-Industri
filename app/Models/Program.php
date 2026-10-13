@@ -18,6 +18,12 @@ class Program extends Model
         'kerja_praktik', 'magang', 'proyek_kolaborasi', 'kunjungan_industri', 'sertifikasi',
     ];
 
+    public const STATUS_DRAFT = 'draft';
+
+    public const STATUS_PUBLISHED = 'published';
+
+    public const STATUS_CLOSED = 'closed';
+
     protected $fillable = [
         'mitra_id', 'judul', 'jenis', 'deskripsi', 'syarat', 'kuota',
         'tanggal_mulai', 'tanggal_selesai', 'status_publikasi',
@@ -44,7 +50,12 @@ class Program extends Model
 
     public function scopePublished(Builder $query): Builder
     {
-        return $query->where('status_publikasi', 'published');
+        return $query->where('status_publikasi', self::STATUS_PUBLISHED);
+    }
+
+    public function isPublished(): bool
+    {
+        return $this->status_publikasi === self::STATUS_PUBLISHED;
     }
 
     /**
