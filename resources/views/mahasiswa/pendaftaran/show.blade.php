@@ -72,6 +72,14 @@
                class="mt-5 inline-block rounded bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700">
                 Catatan Kegiatan ({{ $pendaftaran->kegiatans()->count() }})
             </a>
+            <a href="{{ route('mahasiswa.dokumen.index', $pendaftaran) }}"
+               class="mt-5 inline-block rounded bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700">
+                Kelola Dokumen ({{ $pendaftaran->dokumens()->count() }})
+            </a>
+            <a href="{{ route('mahasiswa.laporan.show', $pendaftaran) }}"
+               class="mt-5 inline-block rounded bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+                Laporan Final{{ $pendaftaran->laporans()->exists() ? ' (Terkumpul)' : '' }}
+            </a>
         @endif
     </div>
 @endsection

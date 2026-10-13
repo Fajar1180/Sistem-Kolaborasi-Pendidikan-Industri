@@ -41,4 +41,19 @@ class DokumenPolicy
             && $dokumen->pendaftaran->mahasiswa_id === $user->mahasiswa?->id
             && $dokumen->pendaftaran->bisaDieditMahasiswa();
     }
+
+    /**
+     * S2-04 (FR-06) — Kelola dokumen saat pendaftaran berjalan.
+     */
+    public function kelola(User $user, \App\Models\Pendaftaran $pendaftaran): bool
+    {
+        return $user->isMahasiswa()
+            && $pendaftaran->mahasiswa_id === $user->mahasiswa?->id
+            && $pendaftaran->isBerjalan();
+    }
+
+    public function update(User $user, Dokumen $dokumen): bool
+    {
+        return $this->kelola($user, $dokumen->pendaftaran);
+    }
 }
