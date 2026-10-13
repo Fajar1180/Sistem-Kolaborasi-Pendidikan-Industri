@@ -11,6 +11,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DokumenController;
 use App\Http\Controllers\Dosen\PengajuanDosenController;
 use App\Http\Controllers\Mahasiswa\KegiatanController;
+use App\Http\Controllers\Mahasiswa\DokumenMahasiswaController;
+use App\Http\Controllers\Mahasiswa\LaporanController;
 use App\Http\Controllers\Mahasiswa\PendaftaranMahasiswaController;
 use App\Http\Controllers\Mahasiswa\PengajuanController;
 use App\Http\Controllers\Mahasiswa\ProgramKatalogController;
@@ -150,5 +152,16 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('pendaftaran/{pendaftaran}/kegiatan/{kegiatan}/edit', [KegiatanController::class, 'edit'])->name('kegiatan.edit');
         Route::put('pendaftaran/{pendaftaran}/kegiatan/{kegiatan}', [KegiatanController::class, 'update'])->name('kegiatan.update');
         Route::delete('pendaftaran/{pendaftaran}/kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
+
+        // Kelola dokumen saat berjalan (FR-06) — S2-04.
+        Route::get('pendaftaran/{pendaftaran}/dokumen', [DokumenMahasiswaController::class, 'index'])->name('dokumen.index');
+        Route::post('pendaftaran/{pendaftaran}/dokumen', [DokumenMahasiswaController::class, 'store'])->name('dokumen.store');
+        Route::put('pendaftaran/{pendaftaran}/dokumen/{dokumen}', [DokumenMahasiswaController::class, 'update'])->name('dokumen.update');
+        Route::delete('pendaftaran/{pendaftaran}/dokumen/{dokumen}', [DokumenMahasiswaController::class, 'destroy'])->name('dokumen.destroy');
+
+        // Laporan final + tenggat (FR-07) — S2-04.
+        Route::get('pendaftaran/{pendaftaran}/laporan', [LaporanController::class, 'show'])->name('laporan.show');
+        Route::post('pendaftaran/{pendaftaran}/laporan', [LaporanController::class, 'store'])->name('laporan.store');
+        Route::delete('pendaftaran/{pendaftaran}/laporan/{laporan}', [LaporanController::class, 'destroy'])->name('laporan.destroy');
     });
 });
