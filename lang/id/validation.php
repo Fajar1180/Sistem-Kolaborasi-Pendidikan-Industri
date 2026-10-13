@@ -57,5 +57,8 @@ return [
         'catatan' => 'catatan',
         'status' => 'status',
         'periode' => 'periode',
+        'catatan_mahasiswa' => 'catatan pengajuan',
+        'files' => 'berkas lampiran',
+        'hapus_dokumen' => 'berkas yang dihapus',
     ],
 ];
