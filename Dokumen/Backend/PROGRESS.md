@@ -112,3 +112,34 @@ Setiap entri progress harus berisi:
     - **Jejak audit (NFR-06):** kolom `catatan` pada `activity_logs` + helper `ActivityLog::catat()`; setiap aksi penting (buat/ubah/nonaktifkan/hapus pengguna, perubahan data master, impor) tercatat.
     - **UI:** halaman Blade responsif + menu navigasi khusus admin (Pengguna, Program Studi, Periode Akademik, Impor CSV).
   - Catatan: suite total 59 test / 184 assertion lulus (`php artisan test`); `migrate:fresh --seed` sukses; Pint bersih pada berkas yang dikerjakan. PR menuju `develop` (`Closes #6`).
+
+## 2026-10-13
+
+- **[DOKUMEN-SA] SRS Sprint 1** — Cabang: `feature/s1-01-setup-and-auth`
+  - Status: Selesai - ready for review
+  - Progress:
+    - Dokumen SRS Sprint 1 selesai di `Dokumen/Sprint1/SPRINT-1-SRS.md`.
+    - Memuat FR Sprint 1 (FR-01, FR-02, FR-03, FR-04, FR-11, FR-14) + NFR-01..08 + kriteria penerimaan + Definition of Done.
+  - Catatan: Acuan implementasi & pengujian Sprint 1 untuk seluruh tim.
+
+- **[DOKUMEN-SA] API Specification Sprint 1** — Cabang: `feature/s1-01-setup-and-auth`
+  - Status: Selesai - ready for review
+  - Progress:
+    - Dokumen API selesai di `Dokumen/Sprint1/API-SPECIFICATION.md`.
+    - Endpoint lengkap: auth, users, programs, mitra, pendaftaran, pengajuan penempatan, persetujuan dosen, seleksi mitra, notifikasi, audit log.
+    - Format request/response JSON, middleware & keamanan (Sanctum, role, throttle, validasi).
+  - Catatan: Kontrak data backend–frontend; perubahan endpoint wajib didokumentasikan di sini.
+
+- **[DOKUMEN-SA] UI/UX Sprint 1** — Cabang: `feature/s1-01-setup-and-auth`
+  - Status: Selesai - ready for review
+  - Progress:
+    - Dokumen UI/UX selesai di `Dokumen/Sprint1/UI-UX.md`.
+    - Wireframe per layar (login, dashboard, program, pendaftaran, pengajuan, admin, mitra), navigasi, skema warna, responsif 3 breakpoint.
+  - Catatan: Mengacu Figma (link di dokumen); frontend menyesuaikan bila ada revisi desain.
+
+- **[DOKUMEN-SA] PRD Ringkas** — Cabang: `feature/s1-01-setup-and-auth`
+  - Status: Selesai - ready for review
+  - Progress:
+    - Dokumen PRD ringkas selesai di `Dokumen/PRD.md` (rangkuman Bagian 7 dokumen perencanaan).
+    - Memuat ringkasan produk, pengguna, alur status, FR/NFR, matriks hak akses, data utama, teknologi.
+  - Catatan: Referensi cepat tim; PRD lengkap tetap pada dokumen perencanaan utama.

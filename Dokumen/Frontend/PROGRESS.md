@@ -58,6 +58,15 @@ Setiap entri progress harus berisi:
 
 Gunakan bagian ini untuk mencatat detail harian.
 
+## 2026-10-13
+- **[DOKUMEN-SA] UI/UX Sprint 1** — Cabang: `feature/s1-01-setup-and-auth`
+  - Status: Selesai - ready for review
+  - Progress:
+    - Dokumen UI/UX Sprint 1 selesai di `Dokumen/Sprint1/UI-UX.md`
+    - Wireframe untuk semua layar utama (login, dashboard, program, pendaftaran, pengajuan, admin, mitra)
+    - Spesifikasi navigasi, responsifitas, dan design system
+  - Catatan: Dokumen ini menjadi acuan tim frontend untuk implementasi tampilan Sprint 1.
+
 ```
 ## 2026-XX-XX
 - [S1-03] Autentikasi: masuk, keluar, dan atur ulang kata sandi — Cabang: `feature/auth`
