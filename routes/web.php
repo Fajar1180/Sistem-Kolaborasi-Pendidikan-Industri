@@ -22,6 +22,8 @@ use App\Http\Controllers\Mitra\ProfilMitraController;
 use App\Http\Controllers\Mitra\PenilaianMitraController;
 use App\Http\Controllers\Mitra\ProgramMitraController;
 use App\Http\Controllers\Mitra\SeleksiMitraController;
+use App\Http\Controllers\Mahasiswa\KomentarController;
+use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -59,6 +61,15 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     // Unduh berkas pengajuan dari storage privat (NFR-08) — S1-09.
     Route::get('dokumen/{dokumen}', [DokumenController::class, 'unduh'])->name('dokumen.unduh');
+
+    // Arsip notifikasi + penanda baca (FR-17) — S2-07b.
+    Route::get('notifikasi', [NotifikasiController::class, 'index'])->name('notifikasi.index');
+    Route::post('notifikasi/baca-semua', [NotifikasiController::class, 'tandaiSemua'])->name('notifikasi.baca-semua');
+    Route::post('notifikasi/{notifikasi}/baca', [NotifikasiController::class, 'tandaiDibaca'])->name('notifikasi.baca');
+
+    // Diskusi komentar per pendaftaran (FR-17) — S2-07a.
+    Route::get('pendaftaran/{pendaftaran}/komentar', [KomentarController::class, 'index'])->name('komentar.index');
+    Route::post('pendaftaran/{pendaftaran}/komentar', [KomentarController::class, 'store'])->name('komentar.store');
 
     /*
     |----------------------------------------------------------------------

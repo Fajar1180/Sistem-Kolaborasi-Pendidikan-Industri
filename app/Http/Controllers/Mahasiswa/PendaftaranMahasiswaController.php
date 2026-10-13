@@ -110,7 +110,7 @@ class PendaftaranMahasiswaController extends Controller
     {
         $this->authorize('view', $pendaftaran);
 
-        $pendaftaran->load(['program.mitra', 'dokumens']);
+        $pendaftaran->load(['program.mitra', 'dokumens', 'bimbingans.dosen.user', 'komentars.user']);
 
         return view('mahasiswa.pendaftaran.show', compact('pendaftaran'));
     }

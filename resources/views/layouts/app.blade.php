@@ -13,6 +13,23 @@
             <a href="{{ url('/') }}" class="font-semibold">{{ config('app.name') }}</a>
             @auth
                 <div class="flex flex-wrap items-center gap-4 text-sm">
+                    @php($notifBelum = auth()->user()->notifikasis()->belumDibaca()->count())
+                    @php($notifBaru = auth()->user()->notifikasis()->latest()->limit(5)->get())
+                    <div class="relative">
+                        <a href="{{ route('notifikasi.index') }}" class="hover:underline">🔔
+                            @if ($notifBelum)
+                                <span class="rounded-full bg-red-600 px-1.5 text-xs text-white">{{ $notifBelum }}</span>
+                            @endif
+                        </a>
+                        @if ($notifBaru->isNotEmpty())
+                            <div class="absolute right-0 z-10 mt-1 w-64 rounded border border-slate-200 bg-white p-2 shadow">
+                                @foreach ($notifBaru as $nb)
+                                    <a href="{{ $nb->link ?: route('notifikasi.index') }}" class="block truncate px-2 py-1 text-xs hover:bg-slate-50">{{ $nb->judul }}</a>
+                                @endforeach
+                                <a href="{{ route('notifikasi.index') }}" class="block px-2 py-1 text-xs font-medium text-blue-600 hover:underline">Lihat arsip →</a>
+                            </div>
+                        @endif
+                    </div>
                     <a href="{{ route('profile.edit') }}" class="hover:underline">
                         {{ auth()->user()->name }}
                         <span class="rounded bg-slate-200 px-2 py-0.5 text-xs uppercase">{{ auth()->user()->role }}</span>

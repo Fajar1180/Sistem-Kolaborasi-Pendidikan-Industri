@@ -107,6 +107,11 @@ class Pendaftaran extends Model
         return $this->hasMany(PenilaianMitra::class);
     }
 
+    public function komentars(): HasMany
+    {
+        return $this->hasMany(Komentar::class);
+    }
+
     /**
      * Label status berbahasa Indonesia (badge §7.5).
      */
