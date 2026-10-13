@@ -38,6 +38,7 @@ class Pendaftaran extends Model
 
     protected $fillable = [
         'mahasiswa_id', 'program_id', 'dosen_pembimbing_id', 'status', 'catatan',
+        'catatan_mahasiswa',
         'diajukan_at', 'disetujui_dosen_at', 'diterima_mitra_at', 'selesai_at',
     ];
 
@@ -120,5 +121,13 @@ class Pendaftaran extends Model
     public function bisaDibatalkan(): bool
     {
         return ! in_array($this->status, self::STATUS_TERKOMIT, true);
+    }
+
+    /**
+     * Boleh diedit mahasiswa? Hanya saat draf atau perlu revisi (§7.5).
+     */
+    public function bisaDieditMahasiswa(): bool
+    {
+        return in_array($this->status, [self::STATUS_DRAF, self::STATUS_PERLU_REVISI], true);
     }
 }

@@ -63,7 +63,7 @@ class PendaftaranMahasiswaController extends Controller
     }
 
     /**
-     * Simpan pendaftaran (status awal: diajukan).
+     * Simpan pendaftaran (status awal: draf — §7.5; diajukan terpisah di S1-09).
      */
     public function store(Request $request, Program $program): RedirectResponse
     {
@@ -88,8 +88,7 @@ class PendaftaranMahasiswaController extends Controller
 
                 return $mahasiswa->pendaftarans()->create([
                     'program_id' => $program->id,
-                    'status' => Pendaftaran::STATUS_DIAJUKAN,
-                    'diajukan_at' => now(),
+                    'status' => Pendaftaran::STATUS_DRAF,
                 ]);
             });
         } catch (UniqueConstraintViolationException $e) {
@@ -100,8 +99,8 @@ class PendaftaranMahasiswaController extends Controller
 
         ActivityLog::catat('daftar_program', $pendaftaran, "Mendaftar program: {$program->judul}");
 
-        return redirect()->route('mahasiswa.pendaftaran.index')
-            ->with('status', 'Pendaftaran berhasil diajukan. Menunggu persetujuan dosen pembimbing.');
+        return redirect()->route('mahasiswa.pengajuan.edit', $pendaftaran)
+            ->with('status', 'Pendaftaran dibuat sebagai draf. Lengkapi formulir pengajuan, lalu ajukan.');
     }
 
     /**
@@ -111,7 +110,7 @@ class PendaftaranMahasiswaController extends Controller
     {
         $this->authorize('view', $pendaftaran);
 
-        $pendaftaran->load('program.mitra');
+        $pendaftaran->load(['program.mitra', 'dokumens']);
 
         return view('mahasiswa.pendaftaran.show', compact('pendaftaran'));
     }
