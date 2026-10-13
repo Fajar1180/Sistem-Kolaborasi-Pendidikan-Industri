@@ -50,5 +50,12 @@ return [
         'tanggal_mulai' => 'tanggal mulai',
         'tanggal_selesai' => 'tanggal selesai',
         'file' => 'berkas CSV',
+        'q' => 'kata kunci',
+        'jenis' => 'jenis program',
+        'judul' => 'judul',
+        'kuota' => 'kuota',
+        'catatan' => 'catatan',
+        'status' => 'status',
+        'periode' => 'periode',
     ],
 ];

@@ -36,6 +36,14 @@
                     </div>
                 </div>
             @endif
+            @if (auth()->user()->isMahasiswa())
+                <div class="border-t border-slate-200 bg-slate-50">
+                    <div class="mx-auto flex max-w-6xl flex-wrap gap-4 px-4 py-2 text-sm">
+                        <a href="{{ route('mahasiswa.program.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Peluang Program</a>
+                        <a href="{{ route('mahasiswa.pendaftaran.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Pendaftaran Saya</a>
+                    </div>
+                </div>
+            @endif
         @endauth
     </nav>
 

@@ -8,6 +8,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Mahasiswa\PendaftaranMahasiswaController;
+use App\Http\Controllers\Mahasiswa\ProgramKatalogController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -88,6 +90,17 @@ Route::middleware(['auth', 'active'])->group(function () {
     });
 
     Route::middleware('role:mahasiswa')->prefix('mahasiswa')->name('mahasiswa.')->group(function () {
-        Route::view('program', 'placeholder', ['judul' => 'Peluang Program & Pendaftaran', 'ref' => 'S1-08'])->name('program.index');
+        // Katalog peluang program (FR-03) — S1-08.
+        Route::get('program', [ProgramKatalogController::class, 'index'])->name('program.index');
+        Route::get('program/{program}', [ProgramKatalogController::class, 'show'])->name('program.show');
+
+        // Pendaftaran program (FR-03) — S1-08.
+        Route::get('program/{program}/daftar', [PendaftaranMahasiswaController::class, 'create'])->name('pendaftaran.create');
+        Route::post('program/{program}/daftar', [PendaftaranMahasiswaController::class, 'store'])->name('pendaftaran.store');
+
+        // Pendaftaran Saya (FR-03) — S1-08.
+        Route::get('pendaftaran', [PendaftaranMahasiswaController::class, 'index'])->name('pendaftaran.index');
+        Route::get('pendaftaran/{pendaftaran}', [PendaftaranMahasiswaController::class, 'show'])->name('pendaftaran.show');
+        Route::delete('pendaftaran/{pendaftaran}', [PendaftaranMahasiswaController::class, 'destroy'])->name('pendaftaran.destroy');
     });
 });

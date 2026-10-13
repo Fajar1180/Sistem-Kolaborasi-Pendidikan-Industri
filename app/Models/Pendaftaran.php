@@ -14,13 +14,27 @@ class Pendaftaran extends Model
     protected $table = 'pendaftarans';
 
     public const STATUS_DRAF = 'draf';
+
     public const STATUS_DIAJUKAN = 'diajukan';
+
     public const STATUS_PERLU_REVISI = 'perlu_revisi';
+
     public const STATUS_DISETUJUI_DOSEN = 'disetujui_dosen';
+
     public const STATUS_DITOLAK = 'ditolak';
+
     public const STATUS_DITERIMA_MITRA = 'diterima_mitra';
+
     public const STATUS_BERJALAN = 'berjalan';
+
     public const STATUS_SELESAI = 'selesai';
+
+    /**
+     * Status yang sudah dikomitmenkan — pendaftaran tidak dapat dibatalkan sendiri.
+     */
+    public const STATUS_TERKOMIT = [
+        self::STATUS_DITERIMA_MITRA, self::STATUS_BERJALAN, self::STATUS_SELESAI,
+    ];
 
     protected $fillable = [
         'mahasiswa_id', 'program_id', 'dosen_pembimbing_id', 'status', 'catatan',
@@ -80,5 +94,31 @@ class Pendaftaran extends Model
     public function penilaianMitras(): HasMany
     {
         return $this->hasMany(PenilaianMitra::class);
+    }
+
+    /**
+     * Label status berbahasa Indonesia (badge §7.5).
+     */
+    public function labelStatus(): string
+    {
+        return match ($this->status) {
+            self::STATUS_DRAF => 'Draf',
+            self::STATUS_DIAJUKAN => 'Diajukan',
+            self::STATUS_PERLU_REVISI => 'Perlu Revisi',
+            self::STATUS_DISETUJUI_DOSEN => 'Disetujui Dosen',
+            self::STATUS_DITOLAK => 'Ditolak',
+            self::STATUS_DITERIMA_MITRA => 'Diterima Mitra',
+            self::STATUS_BERJALAN => 'Berjalan',
+            self::STATUS_SELESAI => 'Selesai',
+            default => ucfirst((string) $this->status),
+        };
+    }
+
+    /**
+     * Boleh dibatalkan mahasiswa? Tidak bila sudah diterima/berjalan/selesai.
+     */
+    public function bisaDibatalkan(): bool
+    {
+        return ! in_array($this->status, self::STATUS_TERKOMIT, true);
     }
 }
