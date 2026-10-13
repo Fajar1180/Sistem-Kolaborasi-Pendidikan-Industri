@@ -59,6 +59,7 @@
                         </td>
                         <td class="px-4 py-3">
                             <div class="flex flex-wrap justify-end gap-2">
+                                <a href="{{ route('mitra.program.pelamar', $program) }}" class="text-slate-700 hover:underline">Pelamar</a>
                                 <a href="{{ route('mitra.program.edit', $program) }}" class="text-blue-600 hover:underline">Ubah</a>
 
                                 @if ($program->status_publikasi !== 'published')

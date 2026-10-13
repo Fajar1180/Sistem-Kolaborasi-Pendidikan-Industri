@@ -72,4 +72,12 @@ class Program extends Model
     {
         return max(0, $this->kuota - $this->kuotaTerpakai());
     }
+
+    /**
+     * Kuota sudah habis? (S2-02 — penerimaan peserta dibatasi kuota.)
+     */
+    public function kuotaPenuh(): bool
+    {
+        return $this->kuotaTerpakai() >= $this->kuota;
+    }
 }
