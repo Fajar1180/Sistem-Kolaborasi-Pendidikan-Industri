@@ -30,9 +30,7 @@ Setiap entri progress harus berisi:
 | S1-04 | Hak akses berdasarkan empat peran | `feature/auth-roles` | Selesai - ready for review | Middleware `role` + `active`, area per peran, dashboard per peran. Issue #4 |
 | S1-05 | Tata letak responsif dan komponen antarmuka dasar | | (Frontend) | Issue #5 |
 | S1-06 | Admin: pengelolaan pengguna dan data master | `feature/admin-users-master` | Selesai - ready for review | CRUD pengguna 4 peran + profil otomatis, aktif/nonaktif, impor CSV, data master Program Studi & Periode Akademik, activity log. Issue #6 |
-| S1-07 | Mitra: profil dan publikasi peluang program | `feature/mitra-peluang` | Selesai - ready for review | CRUD profil mitra + logo, CRUD peluang (draft/published/closed), publish/close, validasi kuota ≥ peserta diterima, policy kepemilikan. Issue #7 |
-| S1-08 | Mahasiswa: melihat peluang dan mendaftar program | | Belum mulai | Issue #8 |
-| S1-09 | Mahasiswa: pengajuan penempatan | | Belum mulai | Issue #9 |
+
 | S1-10 | Uji fungsi Sprint 1 dan dokumentasi | | (QA) | Issue #10 |
 
 ---
@@ -113,6 +111,32 @@ Setiap entri progress harus berisi:
     - **UI:** halaman Blade responsif + menu navigasi khusus admin (Pengguna, Program Studi, Periode Akademik, Impor CSV).
   - Catatan: suite total 59 test / 184 assertion lulus (`php artisan test`); `migrate:fresh --seed` sukses; Pint bersih pada berkas yang dikerjakan. PR menuju `develop` (`Closes #6`).
 
+<<<<<<< HEAD
+- **[S1-08] Mahasiswa: melihat peluang dan mendaftar program** — Cabang: `feature/mahasiswa-daftar`
+  - Status: Selesai - ready for review
+  - Progress:
+    - **Katalog peluang (`/mahasiswa/program`):** hanya program `published` (draf/closed tersembunyi), kartu menampilkan logo-mitra, judul, jenis, sisa kuota, periode; **pencarian** judul/mitra, **filter** jenis & periode (bulan tumpang-tindih), dan **pagination** 9 per halaman.
+    - **Detail program (`/mahasiswa/program/{program}`):** dijaga `ProgramPolicy::view` (hanya published untuk mahasiswa); menampilkan kuota tersisa & tombol Daftar (atau tautan status bila sudah mendaftar).
+    - **Daftar program:** halaman konfirmasi → simpan pendaftaran berstatus `diajukan` (`diajukan_at` tercatat). Cegah: program closed/draft (403), **kuota penuh** (redirect + pesan), dan **duplikat** (1 mahasiswa 1 pendaftaran per program — sesuai constraint unik `mahasiswa_id+program_id`); cadangan race condition ditangkap via `UniqueConstraintViolationException` + `lockForUpdate`.
+    - **Pendaftaran Saya (`/mahasiswa/pendaftaran`):** daftar milik sendiri dengan **badge status berwarna** (§7.5: draf/diajukan/perlu_revisi/disetujui_dosen/ditolak/diterima_mitra/berjalan/selesai) + empty-state.
+    - **Batalkan pendaftaran:** hanya bila belum dikomitmenkan (`Pendaftaran::bisaDibatalkan()` — bukan diterima/berjalan/selesai); pembatalan menghapus baris sehingga mahasiswa boleh mendaftar ulang program yang sama.
+    - **Kepemilikan:** `PendaftaranPolicy` memastikan mahasiswa hanya melihat/membatalkan pendaftarannya sendiri (milik lain → 403).
+    - **Jejak audit (NFR-06):** aksi `daftar_program` & `batal_pendaftaran` tercatat di `activity_logs`.
+    - **Ketahanan:** akun mahasiswa tanpa profil `mahasiswas` tetap dapat membuka katalog & halaman "Pendaftaran Saya" (degradasi anggun, bukan 403) — konsisten dengan perlakuan mitra di S1-07.
+  - Catatan: 18 feature test baru (katalog 8 + pendaftaran 10) lulus; suite total 77 test / 251 assertion. Pint bersih. PR menuju `main` (`Closes #8`) — `develop` sudah dihapus setelah rilis Sprint 1 (#26). Catatan integrasi: PR ini berpotensi sedikit bentrok di `routes/web.php` & `layouts/app.blade.php` dengan PR #27 (S1-07) karena sama-sama mengganti blok per-peran yang berdekatan; resolusi trivial (gabung dua blok per peran).
+
+- **[S1-09] Mahasiswa: pengajuan penempatan** — Cabang: `feature/pengajuan-penempatan` (ditumpuk di atas `feature/mahasiswa-daftar` / PR #28 yang belum di-merge)
+  - Status: Selesai - ready for review
+  - Progress:
+    - **Form pengajuan (`/mahasiswa/pendaftaran/{pendaftaran}/pengajuan`):** mahasiswa mengisi **catatan/motivasi** dan **melampirkan berkas** (PDF/JPG/PNG/DOCX, maks 5 MB per berkas, maks 5 berkas) — isian ditentukan SA.
+    - **Refaktor status awal (§7.5):** "Daftar program" (S1-08) kini membuat pendaftaran berstatus **`draf`** (bukan `diajukan`); mahasiswa melengkapi formulir lalu menekan **Ajukan Penempatan** (`draf`/`perlu_revisi` → `diajukan`, `diajukan_at` tercatat). Status terkunci dari mahasiswa setelah diajukan.
+    - **Ubah & ajukan ulang:** selama status `draf`/`perlu_revisi` (`Pendaftaran::bisaDieditMahasiswa()`) formulir dapat disimpan/diubah; setelah `diajukan` tidak dapat diubah.
+    - **Revisi dosen:** status `perlu_revisi` menampilkan catatan reviewer (`pendaftarans.catatan`) dan mengizinkan perbaikan + ajukan ulang; kolom baru `catatan_mahasiswa` menyimpan catatan mahasiswa.
+    - **Berkas privat (NFR-08):** berkas disimpan di disk `local` (`storage/app/private`, tidak ter-serve web); unduhan melalui `DokumenController` yang dijaga `DokumenPolicy` — hanya **pemilik, dosen pembimbing terkait, mitra penyelenggara, dan admin** (peran lain 403).
+    - **Jejak audit & notifikasi:** aksi `simpan_pengajuan` & `ajukan_pendaftaran` tercatat di `activity_logs`; event `PendaftaranStatusBerubah` dipicu setiap perubahan status (konsumsi notifikasi S2-07).
+    - **Perbaikan kecil:** flash `session('error')` kini tampil di layout (sebelumnya hanya `status`).
+  - Catatan: 14 feature test baru (form/draf/berkas/hapus/ajukan/revisi + akses unduh privat: pemilik/mitra/dosen/admin vs lain) lulus; suite total 91 test / 298 assertion. Pint bersih. PR menuju `feature/mahasiswa-daftar` (ditumpuk; `Closes #9`) — otomatis berpindah base ke `main` saat PR #28 di-merge.
+=======
 - **[S1-07] Mitra: profil dan publikasi peluang program** — Cabang: `feature/mitra-peluang`
   - Status: Selesai - ready for review
   - Progress:
@@ -124,3 +148,4 @@ Setiap entri progress harus berisi:
     - **Jejak audit (NFR-06):** aksi `buat_peluang`, `ubah_peluang`, `publikasi_peluang`, `tutup_peluang`, dan `ubah_profil_mitra` tercatat di `activity_logs`.
     - **UI:** menu navigasi khusus mitra (Profil Perusahaan, Peluang Saya) + kartu dashboard.
   - Catatan: 18 feature test baru (profil + peluang) lulus; suite total 77 test / 256 assertion. `php artisan storage:link` dijalankan agar logo tersaji. PR menuju `main` (`Closes #7`) — `develop` sudah dihapus setelah rilis Sprint 1 (#26), sehingga `main` menjadi target integrasi.
+>>>>>>> origin/main
