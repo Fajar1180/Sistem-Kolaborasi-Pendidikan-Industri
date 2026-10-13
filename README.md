@@ -119,6 +119,6 @@ Detail lengkap: **[RULES.md](./RULES.md)**.
 |---|---|
 | Project Leader / PM | Muhammad Fajar Nurjaman |
 | System Analyst | Ikhsan |
-| Backend Developer | Ilham Almunawar |
-| Frontend Developer | Riphan Romadlon, Fito Zulhian Jabatami |
-| QA & Documentation | Fazna Laisal Ramadhan |
+| Backend Developer | Ilham Almunawar, Fazna Laisal Ramadhan |
+| Frontend Developer | Fito Zulhian Jabatami |
+| QA & Documentation | Riphan Romadlon |
