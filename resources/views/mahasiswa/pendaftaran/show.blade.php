@@ -66,5 +66,12 @@
         @else
             <p class="mt-5 text-sm text-slate-500">Pendaftaran yang sudah diterima/berjalan/selesai tidak dapat dibatalkan sendiri.</p>
         @endif
+
+        @if ($pendaftaran->isBerjalan())
+            <a href="{{ route('mahasiswa.kegiatan.index', $pendaftaran) }}"
+               class="mt-5 inline-block rounded bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700">
+                Catatan Kegiatan ({{ $pendaftaran->kegiatans()->count() }})
+            </a>
+        @endif
     </div>
 @endsection

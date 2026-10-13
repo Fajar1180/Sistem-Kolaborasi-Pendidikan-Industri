@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DokumenController;
 use App\Http\Controllers\Dosen\PengajuanDosenController;
+use App\Http\Controllers\Mahasiswa\KegiatanController;
 use App\Http\Controllers\Mahasiswa\PendaftaranMahasiswaController;
 use App\Http\Controllers\Mahasiswa\PengajuanController;
 use App\Http\Controllers\Mahasiswa\ProgramKatalogController;
@@ -141,5 +142,13 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('pendaftaran/{pendaftaran}/pengajuan', [PengajuanController::class, 'edit'])->name('pengajuan.edit');
         Route::put('pendaftaran/{pendaftaran}/pengajuan', [PengajuanController::class, 'update'])->name('pengajuan.update');
         Route::post('pendaftaran/{pendaftaran}/ajukan', [PengajuanController::class, 'ajukan'])->name('pengajuan.ajukan');
+
+        // Pencatatan kegiatan (FR-05) — S2-03
+        Route::get('pendaftaran/{pendaftaran}/kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');
+        Route::get('pendaftaran/{pendaftaran}/kegiatan/create', [KegiatanController::class, 'create'])->name('kegiatan.create');
+        Route::post('pendaftaran/{pendaftaran}/kegiatan', [KegiatanController::class, 'store'])->name('kegiatan.store');
+        Route::get('pendaftaran/{pendaftaran}/kegiatan/{kegiatan}/edit', [KegiatanController::class, 'edit'])->name('kegiatan.edit');
+        Route::put('pendaftaran/{pendaftaran}/kegiatan/{kegiatan}', [KegiatanController::class, 'update'])->name('kegiatan.update');
+        Route::delete('pendaftaran/{pendaftaran}/kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
     });
 });

@@ -156,4 +156,12 @@ class Pendaftaran extends Model
     {
         return in_array($this->status, self::STATUS_SELEKSI_MITRA, true);
     }
+
+    /**
+     * Berstatus berjalan? (S2-03)
+     */
+    public function isBerjalan(): bool
+    {
+        return $this->status === self::STATUS_BERJALAN;
+    }
 }
