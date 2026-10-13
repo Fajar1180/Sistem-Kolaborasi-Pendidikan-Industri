@@ -15,6 +15,7 @@ use App\Http\Controllers\Mahasiswa\PengajuanController;
 use App\Http\Controllers\Mahasiswa\ProgramKatalogController;
 use App\Http\Controllers\Mitra\ProfilMitraController;
 use App\Http\Controllers\Mitra\ProgramMitraController;
+use App\Http\Controllers\Mitra\SeleksiMitraController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -115,6 +116,11 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::put('program/{program}', [ProgramMitraController::class, 'update'])->name('program.update');
         Route::patch('program/{program}/publish', [ProgramMitraController::class, 'publish'])->name('program.publish');
         Route::patch('program/{program}/close', [ProgramMitraController::class, 'close'])->name('program.close');
+
+        // Seleksi & verifikasi pelamar (FR-12) — S2-02.
+        Route::get('program/{program}/pelamar', [SeleksiMitraController::class, 'index'])->name('program.pelamar');
+        Route::post('pelamar/{pendaftaran}/terima', [SeleksiMitraController::class, 'terima'])->name('pelamar.terima');
+        Route::post('pelamar/{pendaftaran}/tolak', [SeleksiMitraController::class, 'tolak'])->name('pelamar.tolak');
     });
 
     Route::middleware('role:mahasiswa')->prefix('mahasiswa')->name('mahasiswa.')->group(function () {

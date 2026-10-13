@@ -196,6 +196,19 @@ class DatabaseSeeder extends Seeder
             return Pendaftaran::create($attributes);
         });
 
+        // ---- S2-02: tambahan pelamar (disetujui dosen) agar mitra punya antrean seleksi ----
+        foreach ([2, 4] as $idx) {
+            Pendaftaran::create([
+                'mahasiswa_id' => $mahasiswaList[$idx]->id,
+                'program_id' => $programs[0]->id,
+                'dosen_pembimbing_id' => $dosenUsers[$idx % $dosenUsers->count()]->id,
+                'status' => Pendaftaran::STATUS_DISETUJUI_DOSEN,
+                'catatan' => 'Menunggu seleksi mitra.',
+                'diajukan_at' => now()->subDays(12),
+                'disetujui_dosen_at' => now()->subDays(8),
+            ]);
+        }
+
         // ---- Kelengkapan untuk pengajuan berjalan / selesai ----
         $aktif = $pendaftarans->whereIn('status', [
             Pendaftaran::STATUS_BERJALAN,
@@ -241,6 +254,6 @@ class DatabaseSeeder extends Seeder
         Notifikasi::factory()->count(3)->create(['user_id' => $admin->id]);
         ActivityLog::factory()->count(5)->create(['user_id' => $admin->id]);
 
-        $this->command->info('Seeder selesai: 1 admin, 2 dosen, 5 mahasiswa, 2 mitra, 4 program, '.count($statuses).' pengajuan contoh.');
+        $this->command->info('Seeder selesai: 1 admin, 2 dosen, 5 mahasiswa, 2 mitra, 4 program, '.Pendaftaran::count().' pengajuan contoh.');
     }
 }

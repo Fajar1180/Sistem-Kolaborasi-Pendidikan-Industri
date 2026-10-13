@@ -42,7 +42,7 @@ Setiap entri progress harus berisi:
 | ID | Item Pekerjaan | Branch | Status | Progress |
 |----|----------------|--------|--------|----------|
 | S2-01 | Dosen: persetujuan pengajuan penempatan | `feature/dosen-persetujuan` | Selesai - ready for review | Antrean pengajuan untuk dosen pembimbing (hanya milik sendiri, filter status) + halaman detail; aksi setujui/tolak/revisi (catatan wajib untuk tolak/revisi) dengan transisi status §7.5, jejak audit (NFR-06), dan notifikasi mahasiswa; penugasan dosen pembimbing otomatis saat diajukan; admin melihat semua (hanya-baca, §7.7). Issue #11 |
-| S2-02 | Mitra: seleksi dan verifikasi peserta | | Belum mulai | Issue #12 |
+| S2-02 | Mitra: seleksi dan verifikasi peserta | `feature/mitra-seleksi` | Selesai - ready for review | Antrean pelamar per program (status `disetujui_dosen`) untuk mitra penyelenggara; aksi **terima** (→ `diterima_mitra`, dibatasi kuota secara transaksional) & **tolak** (→ `ditolak`, alasan wajib) dengan jejak audit (NFR-06) + notifikasi mahasiswa; transisi otomatis `diterima_mitra` → `berjalan` saat tanggal mulai program tiba (scheduler harian). Issue #12 |
 | S2-03 | Mahasiswa: pencatatan kegiatan | | Belum mulai | Issue #13 |
 | S2-04 | Mahasiswa: pengelolaan dokumen dan pengumpulan laporan | | Belum mulai | Issue #15 |
 | S2-05 | Dosen: pemantauan, pembimbingan, dan evaluasi | | Belum mulai | Issue #16 |
@@ -165,3 +165,15 @@ Setiap entri progress harus berisi:
     - **Jejak audit & notifikasi:** aksi `setujui_pengajuan`/`tolak_pengajuan`/`minta_revisi_pengajuan` tercatat di `activity_logs` (NFR-06); setiap keputusan membuat `Notifikasi` untuk mahasiswa dan memicu event `PendaftaranStatusBerubah` (dikonsumsi email pada S2-07).
     - **UI:** badge status bersama `resources/views/partials/status_badge.blade.php` (8 status §7.5) dipakai ulang di area mahasiswa; menu navigasi dosen & admin ditambah.
   - Catatan: 13 feature test baru (`tests/Feature/Dosen/PersetujuanPengajuanTest.php`) lulus; suite total 123 test / 425 assertion. Pint bersih. PR menuju `main` (`Closes #11`).
+
+- **[S2-02] Mitra: seleksi dan verifikasi peserta** — Cabang: `feature/mitra-seleksi`
+  - Status: Selesai - ready for review
+  - Progress:
+    - **Antrean pelamar (`/mitra/program/{program}/pelamar`):** mitra penyelenggara melihat pelamar berstatus **`disetujui_dosen`** (sudah lolos persetujuan dosen, §7.5/FR-12) untuk programnya, diurutkan paling lama menunggu; menampilkan identitas & prodi mahasiswa, waktu persetujuan dosen, serta sisa kuota. Program mitra lain → 403 (`ProgramPolicy@update`); peran lain ditolak middleware `role:mitra`.
+    - **Terima peserta:** `disetujui_dosen` → `diterima_mitra` (`diterima_mitra_at` tercatat). **Dibatasi kuota secara transaksional** — baris program dikunci `lockForUpdate` lalu dicek `Program::kuotaPenuh()` sehingga penerimaan paralel tidak dapat melewati kuota; bila penuh, aksi ditolak dengan pesan "Kuota program sudah penuh".
+    - **Tolak peserta:** `disetujui_dosen` → `ditolak`; **alasan wajib** (`KeputusanMitraRequest` — "Alasan penolakan wajib diisi."), disimpan pada `pendaftarans.catatan`.
+    - **Kepemilikan & akses:** `PendaftaranPolicy@seleksiMitra` — hanya mitra penyelenggara program dan hanya saat status menunggu seleksi (`bisaDiseleksiMitra()`); mitra lain / status lain → 403.
+    - **Transisi ke berjalan (§7.5 "sistem, sesuai periode"):** perintah `program:mulai-berjalan` mengubah `diterima_mitra` → `berjalan` bila `programs.tanggal_mulai` sudah tiba; dijadwalkan harian (`routes/console.php`, `Schedule::command(...)->dailyAt('01:00')`). Transisi ke `selesai` menyusul pada S2-05/S2-06 (bergantung penilaian).
+    - **Jejak audit & notifikasi:** aksi `terima_peserta` / `tolak_peserta` / `mulai_berjalan` tercatat di `activity_logs` (NFR-06); setiap keputusan membuat `Notifikasi` untuk mahasiswa ("Diterima mitra"/"Ditolak mitra"/"Program mulai berjalan") dan memicu event `PendaftaranStatusBerubah` (dikonsumsi email pada S2-07).
+    - **UI & seeder:** halaman `mitra/pelamar/index.blade.php` (badge kuota + form terima/tolak) dan tautan "Pelamar" pada daftar program mitra; seeder menambah 2 pelamar `disetujui_dosen` pada program pertama agar antrean seleksi dapat didemokan.
+  - Catatan: 13 feature test baru (`tests/Feature/Mitra/SeleksiMitraTest.php`) lulus; suite total 136 test / 465 assertion. Pint bersih. PR menuju `main` (`Closes #12`).

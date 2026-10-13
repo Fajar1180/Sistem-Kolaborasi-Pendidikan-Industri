@@ -41,6 +41,11 @@ class Pendaftaran extends Model
      */
     public const STATUS_DIPUTUS_DOSEN = [self::STATUS_DIAJUKAN, self::STATUS_PERLU_REVISI];
 
+    /**
+     * Status yang menunggu seleksi mitra (§7.5) — S2-02.
+     */
+    public const STATUS_SELEKSI_MITRA = [self::STATUS_DISETUJUI_DOSEN];
+
     protected $fillable = [
         'mahasiswa_id', 'program_id', 'dosen_pembimbing_id', 'status', 'catatan',
         'catatan_mahasiswa',
@@ -142,5 +147,13 @@ class Pendaftaran extends Model
     public function bisaDiputusDosen(): bool
     {
         return in_array($this->status, self::STATUS_DIPUTUS_DOSEN, true);
+    }
+
+    /**
+     * Menunggu seleksi mitra? (S2-02)
+     */
+    public function bisaDiseleksiMitra(): bool
+    {
+        return in_array($this->status, self::STATUS_SELEKSI_MITRA, true);
     }
 }
