@@ -8,6 +8,7 @@ return [
     'email' => ':attribute harus berupa alamat email yang valid.',
     'exists' => ':attribute yang dipilih tidak valid.',
     'file' => ':attribute harus berupa berkas.',
+    'image' => ':attribute harus berupa gambar.',
     'in' => ':attribute yang dipilih tidak valid.',
     'integer' => ':attribute harus berupa bilangan bulat.',
     'mimes' => ':attribute harus berupa berkas berjenis: :values.',
@@ -60,5 +61,7 @@ return [
         'catatan_mahasiswa' => 'catatan pengajuan',
         'files' => 'berkas lampiran',
         'hapus_dokumen' => 'berkas yang dihapus',
+        'syarat' => 'syarat',
+        'logo' => 'logo',
     ],
 ];

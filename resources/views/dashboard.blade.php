@@ -32,9 +32,13 @@
                 <p class="mt-1 text-sm text-slate-500">Setujui / revisi pengajuan mahasiswa (S2-01).</p>
             </a>
         @elseif ($user->role === 'mitra')
+            <a href="{{ route('mitra.profil.edit') }}" class="rounded-lg bg-white p-5 shadow-sm hover:shadow">
+                <h3 class="font-medium">Profil Perusahaan</h3>
+                <p class="mt-1 text-sm text-slate-500">Ubah nama, kontak, deskripsi, dan logo (S1-07).</p>
+            </a>
             <a href="{{ route('mitra.program.index') }}" class="rounded-lg bg-white p-5 shadow-sm hover:shadow">
-                <h3 class="font-medium">Peluang Program</h3>
-                <p class="mt-1 text-sm text-slate-500">Kelola profil & publikasi program (S1-07).</p>
+                <h3 class="font-medium">Peluang Saya</h3>
+                <p class="mt-1 text-sm text-slate-500">Buat, ubah, publikasikan, atau tutup peluang (S1-07).</p>
             </a>
         @else
             <a href="{{ route('mahasiswa.program.index') }}" class="rounded-lg bg-white p-5 shadow-sm hover:shadow">

@@ -12,6 +12,8 @@ use App\Http\Controllers\DokumenController;
 use App\Http\Controllers\Mahasiswa\PendaftaranMahasiswaController;
 use App\Http\Controllers\Mahasiswa\PengajuanController;
 use App\Http\Controllers\Mahasiswa\ProgramKatalogController;
+use App\Http\Controllers\Mitra\ProfilMitraController;
+use App\Http\Controllers\Mitra\ProgramMitraController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -91,7 +93,18 @@ Route::middleware(['auth', 'active'])->group(function () {
     });
 
     Route::middleware('role:mitra')->prefix('mitra')->name('mitra.')->group(function () {
-        Route::view('program', 'placeholder', ['judul' => 'Profil & Peluang Program Mitra', 'ref' => 'S1-07'])->name('program.index');
+        // Profil perusahaan milik sendiri (FR-11).
+        Route::get('profil', [ProfilMitraController::class, 'edit'])->name('profil.edit');
+        Route::put('profil', [ProfilMitraController::class, 'update'])->name('profil.update');
+
+        // Peluang program milik sendiri (FR-11).
+        Route::get('program', [ProgramMitraController::class, 'index'])->name('program.index');
+        Route::get('program/create', [ProgramMitraController::class, 'create'])->name('program.create');
+        Route::post('program', [ProgramMitraController::class, 'store'])->name('program.store');
+        Route::get('program/{program}/edit', [ProgramMitraController::class, 'edit'])->name('program.edit');
+        Route::put('program/{program}', [ProgramMitraController::class, 'update'])->name('program.update');
+        Route::patch('program/{program}/publish', [ProgramMitraController::class, 'publish'])->name('program.publish');
+        Route::patch('program/{program}/close', [ProgramMitraController::class, 'close'])->name('program.close');
     });
 
     Route::middleware('role:mahasiswa')->prefix('mahasiswa')->name('mahasiswa.')->group(function () {
