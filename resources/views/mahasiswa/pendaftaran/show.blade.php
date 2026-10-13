@@ -81,5 +81,7 @@
                 Laporan Final{{ $pendaftaran->laporans()->exists() ? ' (Terkumpul)' : '' }}
             </a>
         @endif
+
+        @include('partials.komentar', ['pendaftaran' => $pendaftaran])
     </div>
 @endsection
