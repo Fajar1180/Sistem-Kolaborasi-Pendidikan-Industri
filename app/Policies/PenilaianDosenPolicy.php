@@ -12,8 +12,11 @@ use App\Models\User;
  */
 class PenilaianDosenPolicy
 {
-    public function kelolaNilai(User $user, Pendaftaran $pendaftaran): bool
+    public function kelolaNilai(User $user, Pendaftaran $pendaftaran, mixed ...$rest): bool
     {
-        return app(BimbinganPolicy::class)->kelolaNilai($user, $pendaftaran);
+        $class = $rest[0] ?? \App\Models\PenilaianDosen::class;
+
+        return $class === \App\Models\PenilaianDosen::class
+            && app(BimbinganPolicy::class)->kelolaNilai($user, $pendaftaran);
     }
 }

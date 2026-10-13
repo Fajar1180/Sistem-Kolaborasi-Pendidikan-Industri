@@ -19,6 +19,7 @@ use App\Http\Controllers\Mahasiswa\PendaftaranMahasiswaController;
 use App\Http\Controllers\Mahasiswa\PengajuanController;
 use App\Http\Controllers\Mahasiswa\ProgramKatalogController;
 use App\Http\Controllers\Mitra\ProfilMitraController;
+use App\Http\Controllers\Mitra\PenilaianMitraController;
 use App\Http\Controllers\Mitra\ProgramMitraController;
 use App\Http\Controllers\Mitra\SeleksiMitraController;
 use App\Http\Controllers\ProfileController;
@@ -137,6 +138,11 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('program/{program}/pelamar', [SeleksiMitraController::class, 'index'])->name('program.pelamar');
         Route::post('pelamar/{pendaftaran}/terima', [SeleksiMitraController::class, 'terima'])->name('pelamar.terima');
         Route::post('pelamar/{pendaftaran}/tolak', [SeleksiMitraController::class, 'tolak'])->name('pelamar.tolak');
+
+        // Penilaian peserta (FR-11) — S2-06. Rubrik bersama, final terkunci.
+        Route::get('penilaian', [PenilaianMitraController::class, 'index'])->name('penilaian.index');
+        Route::get('penilaian/{pendaftaran}', [PenilaianMitraController::class, 'edit'])->name('penilaian.edit');
+        Route::put('penilaian/{pendaftaran}', [PenilaianMitraController::class, 'update'])->name('penilaian.update');
     });
 
     Route::middleware('role:mahasiswa')->prefix('mahasiswa')->name('mahasiswa.')->group(function () {

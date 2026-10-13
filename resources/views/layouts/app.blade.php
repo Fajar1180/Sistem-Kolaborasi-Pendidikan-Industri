@@ -48,6 +48,7 @@
                     <div class="mx-auto flex max-w-6xl flex-wrap gap-4 px-4 py-2 text-sm">
                         <a href="{{ route('mitra.profil.edit') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Profil Perusahaan</a>
                         <a href="{{ route('mitra.program.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Peluang Saya</a>
+                        <a href="{{ route('mitra.penilaian.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Penilaian Peserta</a>
                     </div>
                 </div>
             @endif
