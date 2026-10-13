@@ -33,6 +33,28 @@
                         <a href="{{ route('admin.master.program-studi.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Program Studi</a>
                         <a href="{{ route('admin.master.periode-akademik.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Periode Akademik</a>
                         <a href="{{ route('admin.import.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Impor CSV</a>
+                        <a href="{{ route('admin.pengajuan.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Pengajuan Masuk</a>
+                    </div>
+                </div>
+            @elseif (auth()->user()->isDosen())
+                <div class="border-t border-slate-200 bg-slate-50">
+                    <div class="mx-auto flex max-w-6xl flex-wrap gap-4 px-4 py-2 text-sm">
+                        <a href="{{ route('dosen.pengajuan.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Pengajuan Masuk</a>
+                    </div>
+                </div>
+            @elseif (auth()->user()->isMitra())
+                <div class="border-t border-slate-200 bg-slate-50">
+                    <div class="mx-auto flex max-w-6xl flex-wrap gap-4 px-4 py-2 text-sm">
+                        <a href="{{ route('mitra.profil.edit') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Profil Perusahaan</a>
+                        <a href="{{ route('mitra.program.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Peluang Saya</a>
+                    </div>
+                </div>
+            @endif
+            @if (auth()->user()->isMahasiswa())
+                <div class="border-t border-slate-200 bg-slate-50">
+                    <div class="mx-auto flex max-w-6xl flex-wrap gap-4 px-4 py-2 text-sm">
+                        <a href="{{ route('mahasiswa.program.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Peluang Program</a>
+                        <a href="{{ route('mahasiswa.pendaftaran.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Pendaftaran Saya</a>
                     </div>
                 </div>
             @endif
@@ -42,6 +64,10 @@
     <main class="mx-auto max-w-6xl px-4 py-8">
         @if (session('status'))
             <div class="mb-4 rounded bg-green-100 px-4 py-2 text-green-800">{{ session('status') }}</div>
+        @endif
+
+        @if (session('error'))
+            <div class="mb-4 rounded bg-red-100 px-4 py-2 text-red-800">{{ session('error') }}</div>
         @endif
 
         @if ($errors->any())

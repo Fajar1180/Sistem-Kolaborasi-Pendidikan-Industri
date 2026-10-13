@@ -35,6 +35,30 @@ class PendaftaranPolicy
         return $this->update($user, $pendaftaran);
     }
 
+    /**
+     * S2-01 — Dosen pembimbing yang ditugaskan boleh memutuskan pengajuan yang
+     * masih menunggu keputusan (diajukan/perlu_revisi).
+     */
+    public function putuskanDosen(User $user, Pendaftaran $pendaftaran): bool
+    {
+        return $user->isDosen()
+            && $pendaftaran->dosen_pembimbing_id !== null
+            && $pendaftaran->dosen_pembimbing_id === $user->dosen?->id
+            && $pendaftaran->bisaDiputusDosen();
+    }
+
+    /**
+     * S2-02 — Mitra penyelenggara program boleh menyeleksi pelamar yang sudah
+     * disetujui dosen (§7.5, matriks §7.7).
+     */
+    public function seleksiMitra(User $user, Pendaftaran $pendaftaran): bool
+    {
+        return $user->isMitra()
+            && $pendaftaran->program?->mitra_id !== null
+            && $pendaftaran->program?->mitra_id === $user->mitra?->id
+            && $pendaftaran->bisaDiseleksiMitra();
+    }
+
     private function owns(User $user, Pendaftaran $pendaftaran): bool
     {
         return $pendaftaran->mahasiswa_id === $user->mahasiswa?->id;

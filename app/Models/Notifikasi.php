@@ -32,4 +32,18 @@ class Notifikasi extends Model
     {
         return $query->whereNull('dibaca_at');
     }
+
+    /**
+     * S2-01 — Buat notifikasi dalam sistem untuk seorang pengguna.
+     * (S2-07 menyempurnakan daftar/penanda baca + email.)
+     */
+    public static function kirim(User $user, string $judul, string $isi, ?string $link = null): self
+    {
+        return static::create([
+            'user_id' => $user->id,
+            'judul' => $judul,
+            'isi' => $isi,
+            'link' => $link,
+        ]);
+    }
 }
