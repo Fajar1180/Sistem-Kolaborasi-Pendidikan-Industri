@@ -63,5 +63,7 @@ return [
         'catatan_mahasiswa' => 'catatan pengajuan',
         'files' => 'berkas lampiran',
         'hapus_dokumen' => 'berkas yang dihapus',
+        'syarat' => 'syarat',
+        'logo' => 'logo',
     ],
 ];
