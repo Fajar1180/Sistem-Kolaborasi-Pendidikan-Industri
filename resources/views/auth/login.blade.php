@@ -8,6 +8,12 @@
         <div class="mb-4 rounded bg-green-100 px-3 py-2 text-sm text-green-800">{{ session('status') }}</div>
     @endif
 
+    @if (session('info'))
+        <div class="mb-4 rounded-lg bg-blue-50 border border-blue-200 px-4 py-3 text-blue-800 text-sm">
+            <span class="font-medium">ℹ️</span> {{ session('info') }}
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('login') }}" class="space-y-4">
         @csrf
 
@@ -37,10 +43,13 @@
             Masuk
         </button>
 
-        @if (Route::has('password.request'))
-            <a href="{{ route('password.request') }}" class="block text-center text-sm text-blue-600 hover:underline">
-                Lupa kata sandi?
-            </a>
-        @endif
+        <div class="flex items-center justify-between text-sm">
+            @if (Route::has('password.request'))
+                <a href="{{ route('password.request') }}" class="text-blue-600 hover:underline">
+                    Lupa kata sandi?
+                </a>
+            @endif
+            <span class="text-slate-500">Belum punya akun? <a href="mailto:admin@skp.test" class="text-blue-600 hover:underline">Hubungi admin</a></span>
+        </div>
     </form>
 @endsection
