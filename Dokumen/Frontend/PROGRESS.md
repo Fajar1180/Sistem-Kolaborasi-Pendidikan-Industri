@@ -75,3 +75,12 @@ Gunakan bagian ini untuk mencatat detail harian.
     - ...
   - Catatan: ...
 ```
+## 2026-10-14
+- [S1-05] Tata letak responsif dan komponen antarmuka dasar — Cabang: `feature/base-layout`
+  - Status: Sedang mengerjakan
+  - Progress:
+    - Menambahkan sidebar collapsible di navbar (mobile: hamburger)
+    - Menambahkan komponen status badge reusable (partials/status_badge.blade.php)
+    - Memastikan error 404/403/419/500 menggunakan bahasa Indonesia
+    - Memastikan navigasi peran konsisten (@auth blocks)
+  - Catatan: Template dasar sudah ada; perlu tambahan sidebar & komponen reusable untuk semua peran
