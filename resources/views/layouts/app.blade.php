@@ -51,6 +51,7 @@
                         <a href="{{ route('admin.master.periode-akademik.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Periode Akademik</a>
                         <a href="{{ route('admin.import.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Impor CSV</a>
                         <a href="{{ route('admin.pengajuan.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Pengajuan Masuk</a>
+                        <a href="{{ route('admin.rekap.index') }}" class="text-slate-600 hover:text-blue-600 hover:underline">Rekap & Laporan</a>
                     </div>
                 </div>
             @elseif (auth()->user()->isDosen())

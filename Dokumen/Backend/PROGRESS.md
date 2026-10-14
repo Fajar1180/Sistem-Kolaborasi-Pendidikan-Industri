@@ -207,3 +207,13 @@ Setiap entri progress harus berisi:
     - **Jejak audit & notifikasi:** aksi `terima_peserta` / `tolak_peserta` / `mulai_berjalan` tercatat di `activity_logs` (NFR-06); setiap keputusan membuat `Notifikasi` untuk mahasiswa ("Diterima mitra"/"Ditolak mitra"/"Program mulai berjalan") dan memicu event `PendaftaranStatusBerubah` (dikonsumsi email pada S2-07).
     - **UI & seeder:** halaman `mitra/pelamar/index.blade.php` (badge kuota + form terima/tolak) dan tautan "Pelamar" pada daftar program mitra; seeder menambah 2 pelamar `disetujui_dosen` pada program pertama agar antrean seleksi dapat didemokan.
   - Catatan: 13 feature test baru (`tests/Feature/Mitra/SeleksiMitraTest.php`) lulus; suite total 136 test / 465 assertion. Pint bersih. PR menuju `main` (`Closes #12`).
+## 2026-10-14
+- [S2-08] Admin: pengawasan program, rekapitulasi, dan ekspor laporan — Cabang: `feature/admin-rekap`
+  - Status: Selesai - ready for review
+  - Progress:
+    - Controller RekapController dengan 5 method: index, perProgram, perProdi, perMitra, eksporExcel
+    - Route admin.rekap.* di web.php
+    - View rekap (index, per-program, per-prodi, per-mitra) dengan filter dan tabel
+    - Ekspor CSV/Excel via streamDownload
+    - Link menu "Rekap & Laporan" di navbar admin
+  - Catatan: Implementasi minimal FR-15 & FR-16. Ekspor PDF belum (prioritas rendah per issue).
