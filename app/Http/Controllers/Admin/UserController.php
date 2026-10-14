@@ -110,7 +110,7 @@ class UserController extends Controller
     public function toggleActive(User $user): RedirectResponse
     {
         if ($user->is(auth()->user())) {
-            return back()->withErrors(['user' => 'Anda tidak dapat menonaktifkan akun Anda sendiri.']);
+            return back()->with('error', 'Anda tidak dapat menonaktifkan akun Anda sendiri.');
         }
 
         $user->is_active = ! $user->is_active;
@@ -124,13 +124,11 @@ class UserController extends Controller
     public function destroy(User $user): RedirectResponse
     {
         if ($user->is(auth()->user())) {
-            return back()->withErrors(['user' => 'Anda tidak dapat menghapus akun Anda sendiri.']);
+            return back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
         }
 
         if ($this->punyaRelasi($user)) {
-            return back()->withErrors([
-                'user' => 'Akun memiliki data terkait sehingga tidak boleh dihapus. Nonaktifkan akun ini.',
-            ]);
+            return back()->with('error', 'Akun memiliki data terkait sehingga tidak boleh dihapus. Nonaktifkan akun ini.');
         }
 
         $email = $user->email;
