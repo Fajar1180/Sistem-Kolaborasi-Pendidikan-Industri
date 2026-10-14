@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\PeriodeAkademikController;
 use App\Http\Controllers\Admin\ProgramStudiController;
+use App\Http\Controllers\Admin\RekapController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserImportController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -104,6 +105,13 @@ Route::middleware(['auth', 'active'])->group(function () {
         // Pengawasan seluruh pengajuan penempatan (hanya-baca) — S2-01/S2-08.
         Route::get('pengajuan', [PengajuanDosenController::class, 'index'])->name('pengajuan.index');
         Route::get('pengajuan/{pendaftaran}', [PengajuanDosenController::class, 'show'])->name('pengajuan.show');
+
+        // Rekap dan ekspor laporan (FR-15, FR-16) — S2-08.
+        Route::get('rekap', [RekapController::class, 'index'])->name('rekap.index');
+        Route::get('rekap/program', [RekapController::class, 'perProgram'])->name('rekap.program');
+        Route::get('rekap/prodi', [RekapController::class, 'perProdi'])->name('rekap.prodi');
+        Route::get('rekap/mitra', [RekapController::class, 'perMitra'])->name('rekap.mitra');
+        Route::get('rekap/ekspor-excel', [RekapController::class, 'eksporExcel'])->name('rekap.ekspor-excel');
     });
 
     /*

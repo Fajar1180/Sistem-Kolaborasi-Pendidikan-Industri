@@ -63,6 +63,7 @@
                         <a href="{{ route('admin.master.periode-akademik.index') }}" class="rounded px-2 py-1 text-slate-600 hover:bg-slate-200 hover:text-blue-600 md:hover:bg-transparent">Periode Akademik</a>
                         <a href="{{ route('admin.import.index') }}" class="rounded px-2 py-1 text-slate-600 hover:bg-slate-200 hover:text-blue-600 md:hover:bg-transparent">Impor CSV</a>
                         <a href="{{ route('admin.pengajuan.index') }}" class="rounded px-2 py-1 text-slate-600 hover:bg-slate-200 hover:text-blue-600 md:hover:bg-transparent">Pengajuan Masuk</a>
+                        <a href="{{ route('admin.rekap.index') }}" class="rounded px-2 py-1 text-slate-600 hover:bg-slate-200 hover:text-blue-600 md:hover:bg-transparent">Rekap & Laporan</a>
                     @elseif (auth()->user()->isDosen())
                         <a href="{{ route('dosen.pengajuan.index') }}" class="rounded px-2 py-1 text-slate-600 hover:bg-slate-200 hover:text-blue-600 md:hover:bg-transparent">Pengajuan Masuk</a>
                         <a href="{{ route('dosen.bimbingan.index') }}" class="rounded px-2 py-1 text-slate-600 hover:bg-slate-200 hover:text-blue-600 md:hover:bg-transparent">Bimbingan</a>
