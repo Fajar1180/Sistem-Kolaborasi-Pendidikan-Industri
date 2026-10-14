@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Mahasiswa;
 use App\Models\Pendaftaran;
 use App\Models\Program;
 use App\Models\ProgramStudi;
@@ -27,10 +28,10 @@ class RekapController extends Controller
             $query->where('status', $request->string('status'));
         }
 
-        // Filter prodi
+        // Filter prodi (kolom string pada mahasiswas)
         if ($request->filled('prodi')) {
-            $query->whereHas('mahasiswa', fn($q) => 
-                $q->where('program_studi_id', $request->integer('prodi'))
+            $query->whereHas('mahasiswa', fn($q) =>
+                $q->where('prodi', $request->string('prodi'))
             );
         }
 
@@ -62,7 +63,7 @@ class RekapController extends Controller
             'pendaftarans' => $pendaftarans,
             'stats' => $stats,
             'filter' => $request->only(['status', 'prodi', 'mitra', 'periode']),
-            'prodis' => ProgramStudi::where('is_aktif', true)->orderBy('nama')->get(),
+            'prodis' => Mahasiswa::query()->select('prodi')->distinct()->orderBy('prodi')->pluck('prodi'),
             'mitras' => Mitra::orderBy('nama_perusahaan')->get(),
         ]);
     }
@@ -89,19 +90,23 @@ class RekapController extends Controller
 
     public function perProdi(): View
     {
-        $prodis = ProgramStudi::where('is_aktif', true)
-            ->get()
-            ->map(function ($prodi) {
-                $mahasiswas = $prodi->mahasiswas;
-                $pendaftarans = Pendaftaran::whereIn('mahasiswa_id', $mahasiswas->pluck('id'))->get();
-                
-                return [
-                    'prodi' => $prodi,
-                    'total_pendaftaran' => $pendaftarans->count(),
-                    'berjalan' => $pendaftarans->where('status', Pendaftaran::STATUS_BERJALAN)->count(),
-                    'selesai' => $pendaftarans->where('status', Pendaftaran::STATUS_SELESAI)->count(),
-                ];
-            });
+        $groups = Mahasiswa::query()
+            ->select('prodi', \DB::raw('COUNT(*) as total'))
+            ->groupBy('prodi')
+            ->orderBy('prodi')
+            ->get();
+
+        $prodis = $groups->map(function ($g) {
+            $pendaftarans = Pendaftaran::whereHas('mahasiswa', fn($q) =>
+                $q->where('prodi', $g->prodi))->get();
+
+            return [
+                'prodi' => $g->prodi,
+                'total_pendaftaran' => $pendaftarans->count(),
+                'berjalan' => $pendaftarans->where('status', Pendaftaran::STATUS_BERJALAN)->count(),
+                'selesai' => $pendaftarans->where('status', Pendaftaran::STATUS_SELESAI)->count(),
+            ];
+        });
 
         return view('admin.rekap.per-prodi', compact('prodis'));
     }
@@ -129,10 +134,10 @@ class RekapController extends Controller
     public function eksporExcel(Request $request): StreamedResponse
     {
         $pendaftarans = Pendaftaran::query()
-            ->with(['mahasiswa.user', 'mahasiswa.programStudi', 'program.mitra', 'dosenPembimbing.user'])
+            ->with(['mahasiswa.user', 'program.mitra', 'dosenPembimbing.user'])
             ->when($request->filled('status'), fn($q) => $q->where('status', $request->string('status')))
-            ->when($request->filled('prodi'), fn($q) => 
-                $q->whereHas('mahasiswa', fn($qq) => $qq->where('program_studi_id', $request->integer('prodi')))
+            ->when($request->filled('prodi'), fn($q) =>
+                $q->whereHas('mahasiswa', fn($qq) => $qq->where('prodi', $request->string('prodi')))
             )
             ->when($request->filled('mitra'), fn($q) => 
                 $q->whereHas('program', fn($qq) => $qq->where('mitra_id', $request->integer('mitra')))
@@ -155,7 +160,7 @@ class RekapController extends Controller
                     $p->id,
                     $p->mahasiswa->user->name ?? '-',
                     $p->mahasiswa->nim ?? '-',
-                    $p->mahasiswa->programStudi->nama ?? '-',
+                    $p->mahasiswa->prodi ?? '-',
                     $p->program->judul ?? '-',
                     $p->program->mitra->nama_perusahaan ?? '-',
                     $p->dosenPembimbing->user->name ?? '-',

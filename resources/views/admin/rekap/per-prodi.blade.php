@@ -26,7 +26,7 @@
             <tbody class="divide-y divide-slate-200">
                 @forelse($prodis as $item)
                     <tr class="hover:bg-slate-50">
-                        <td class="px-4 py-3">{{ $item['prodi']->nama }}</td>
+                        <td class="px-4 py-3">{{ $item['prodi'] }}</td>
                         <td class="px-4 py-3 text-right">{{ $item['total_pendaftaran'] }}</td>
                         <td class="px-4 py-3 text-right">{{ $item['berjalan'] }}</td>
                         <td class="px-4 py-3 text-right">{{ $item['selesai'] }}</td>

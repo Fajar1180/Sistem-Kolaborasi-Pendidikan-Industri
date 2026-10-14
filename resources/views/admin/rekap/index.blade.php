@@ -65,7 +65,7 @@
                     <select name="prodi" class="mt-1 w-full rounded border border-slate-300 px-3 py-2">
                         <option value="">Semua Prodi</option>
                         @foreach($prodis as $prodi)
-                            <option value="{{ $prodi->id }}" {{ request('prodi') == $prodi->id ? 'selected' : '' }}>{{ $prodi->nama }}</option>
+                            <option value="{{ $prodi }}" {{ request('prodi') == $prodi ? 'selected' : '' }}>{{ $prodi }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -107,7 +107,7 @@
                         <td class="px-4 py-3">{{ $p->program->mitra->nama_perusahaan ?? '-' }}</td>
                         <td class="px-4 py-3">{{ $p->dosenPembimbing->user->name ?? '-' }}</td>
                         <td class="px-4 py-3">
-                            @include('partials.status_badge')
+                            @include('partials.status_badge', ['pendaftaran' => $p])
                         </td>
                         <td class="px-4 py-3">
                             <a href="{{ route('admin.pengajuan.show', $p) }}" class="text-blue-600 hover:underline">Lihat</a>
