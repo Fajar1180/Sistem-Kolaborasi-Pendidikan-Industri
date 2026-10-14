@@ -47,7 +47,10 @@
                         <span class="rounded bg-slate-200 px-2 py-0.5 text-xs uppercase">{{ auth()->user()->role }}</span>
                     </a>
                     <a href="{{ route('dashboard') }}" class="text-slate-600 hover:underline">Dashboard</a>
-                    <a href="{{ route('logout') }}" class="text-red-600 hover:text-red-700 font-medium text-sm">Keluar</a>
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                        @csrf
+                        <button type="submit" class="text-red-600 hover:text-red-700 font-medium text-sm">Keluar</button>
+                    </form>
                 </div>
             @endauth
         </div>
