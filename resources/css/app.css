@@ -7,3 +7,33 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+/* Mintlify Design System Customization */
+@layer base {
+    :root {
+        --color-near-black: #0d0d0d;
+        --color-brand: #18E299;
+        --color-brand-light: #d4fae8;
+        --color-gray-700: #333333;
+        --color-gray-500: #666666;
+        --border-subtle: rgba(0,0,0,0.05);
+        --border-medium: rgba(0,0,0,0.08);
+        --shadow-card: 0 2px 4px rgba(0,0,0,0.03);
+    }
+}
+
+@layer components {
+    .btn-pill {
+        @apply rounded-full px-6 py-2 font-medium text-sm transition-opacity;
+    }
+    .btn-pill:hover { @apply opacity-90; }
+    
+    .card-mint {
+        @apply bg-white border rounded-2xl p-6 shadow-sm;
+        border-color: var(--border-subtle);
+        box-shadow: var(--shadow-card);
+    }
+    
+    .nav-link { @apply font-medium text-sm transition-colors; }
+    .nav-link:hover { color: var(--color-brand); }
+}
