@@ -28,7 +28,7 @@ use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome')->name('home');
+Route::view('/', 'landing')->name('home');
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +38,9 @@ Route::view('/', 'welcome')->name('home');
 Route::middleware('guest')->group(function () {
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
+
+    // Redirect /register ke login dengan info (issue #44)
+    Route::get('register', fn() => redirect()->route('login')->with('info', 'Akun dibuat oleh admin. Silakan hubungi administrator untuk mendapatkan akses.'))->name('register');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
