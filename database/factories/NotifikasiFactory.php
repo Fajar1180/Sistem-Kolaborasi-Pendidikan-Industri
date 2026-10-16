@@ -17,8 +17,8 @@ class NotifikasiFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'judul' => fake()->sentence(3),
-            'isi' => fake()->paragraph(),
+            'judul' => fake('id_ID')->sentence(3),
+            'isi' => fake('id_ID')->paragraph(),
             'link' => '/dashboard',
             'dibaca_at' => null,
         ];

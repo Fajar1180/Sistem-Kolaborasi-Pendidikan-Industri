@@ -34,7 +34,7 @@ Setiap entri progress berisi:
 
 | ID | Item Pekerjaan | Branch | Status | Progress |
 |----|----------------|--------|--------|----------|
-| S2-10 | Uji fungsi Sprint 2 dan dokumentasi | | Belum mulai | Issue #21 |
+| S2-10 | Uji fungsi Sprint 2 dan dokumentasi | `docs/qa-sprint-2` | Sedang mengerjakan | Suite 175 test lulus (S2-09 lalu timbulkan regresi: mengubah `withErrors`→`with('error')` pada controller admin, tes masih pakai `assertSessionHasErrors`; dibalikkan ke `withErrors` agar 175/175 hijau). Skenario uji S2-01…S2-09 + demo script ditulis. Issue #21 |
 
 ---
 
@@ -61,3 +61,15 @@ Setiap entri progress berisi:
     - Menyiapkan **demo script sprint review 10 menit** sesuai sprint goal §6.1 — lihat `Demo-Script-Sprint-Review.md`.
     - Belum dijalankan (menunggu QA): uji manual di HP (360px) + desktop, Chrome + 1 browser lain, dan penandaan temuan sebagai issue `bug` + `sprint-1`.
   - Catatan: Dokumen menuju PR `Closes #10`. Temuan baru (bila ada) dicatat sebagai issue terpisah berlabel `bug` + `sprint-1`, tidak ditumpuk di issue ini.
+
+## 2026-10-16
+
+- **[S2-10] Uji fungsi Sprint 2 dan dokumentasi** — Cabang: `docs/qa-sprint-2`
+  - Status: Sedang mengerjakan
+  - Progress:
+    - Temukan dan memperbaiki **regresi S2-09**: `UserImportController`, `UserController::toggleActive`, `UserController::destroy` diubah S2-09 dari `withErrors()` ke `with('error')`, sedangkan tes pakai `assertSessionHasErrors()` → 3 test gagal. Dibalikkan ke `withErrors(['key' => 'pesan'])` agar tes dan layout (`$errors->any()`) berfungsi.
+    - Menjalankan **uji otomatis** (`php artisan test`) pada build integrasi → **175 test lulus, 555 assertion, 0 gagal** (lihat `Laporan-Uji-Sprint-2.md`).
+    - Menyusun **skenario uji Sprint 2** (S2-01…S2-09 + NFR) dalam format tabel ID, langkah, hasil harapan, hasil aktual, otomatis/manual, status — lihat `Skenario-Uji-Sprint-2.md` (60 skenario: 57 otomatis, 3 manual).
+    - Menyiapkan **laporan uji** (`Laporan-Uji-Sprint-2.md`) + **demo script sprint review 10 menit** (`Demo-Script-Sprint-Review-2.md`).
+    - Belum dijalankan (menunggu QA): uji manual di HP (360px) + desktop, Chrome + 1 browser lain (TC-NFR-01…03).
+  - Catatan: Dokumen menuju PR `Closes #21`. Temuan baru (bila ada) dicatat sebagai issue terpisah berlabel `bug` + `sprint-2`, tidak ditumpuk di issue ini.

@@ -39,10 +39,13 @@ class DashboardController extends Controller
             ];
         } elseif ($user->isMitra()) {
             $mitra = $user->mitra;
+            // Eager load untuk efisiensi
+            $programs = $mitra?->programs()->with('pendaftarans')->get();
+            
             $stats = [
-                'programAktif' => $mitra?->programs()->where('status', 'aktif')->count() ?? 0,
-                'pendaftaranMasuk' => $mitra?->programs()->sum(fn($p) => $p->pendaftarans()->count()) ?? 0,
-                'menungguSeleksi' => $mitra?->programs()->sum(fn($p) => $p->pendaftarans()->where('status', 'diajukan')->count()) ?? 0,
+                'programAktif' => $programs?->where('status', 'aktif')->count() ?? 0,
+                'pendaftaranMasuk' => $programs?->sum(fn($p) => $p->pendaftarans->count()) ?? 0,
+                'menungguSeleksi' => $programs?->sum(fn($p) => $p->pendaftarans->where('status', 'diajukan')->count()) ?? 0,
                 'notifikasiBlmDibaca' => $user->notifikasis()->belumDibaca()->count(),
             ];
         } else { // Mahasiswa
