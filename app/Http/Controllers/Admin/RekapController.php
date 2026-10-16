@@ -71,7 +71,7 @@ class RekapController extends Controller
     public function perProgram(): View
     {
         $programs = Program::query()
-            ->with('mitra')
+            ->with(['mitra', 'pendaftarans'])
             ->withCount('pendaftarans')
             ->get()
             ->map(function ($prog) {
@@ -90,23 +90,25 @@ class RekapController extends Controller
 
     public function perProdi(): View
     {
-        $groups = Mahasiswa::query()
-            ->select('prodi', \DB::raw('COUNT(*) as total'))
+        // Single query: get pendaftarans grouped by mahasiswa->prodi with counts
+        $prodis = Mahasiswa::query()
+            ->withCount('pendaftarans')
+            ->select('prodi', \DB::raw('COUNT(*) as total_mahasiswa'))
             ->groupBy('prodi')
             ->orderBy('prodi')
-            ->get();
+            ->get()
+            ->map(function ($g) {
+                $pendaftarans = Pendaftaran::whereHas('mahasiswa', fn($q) => 
+                    $q->where('prodi', $g->prodi))
+                    ->get();
 
-        $prodis = $groups->map(function ($g) {
-            $pendaftarans = Pendaftaran::whereHas('mahasiswa', fn($q) =>
-                $q->where('prodi', $g->prodi))->get();
-
-            return [
-                'prodi' => $g->prodi,
-                'total_pendaftaran' => $pendaftarans->count(),
-                'berjalan' => $pendaftarans->where('status', Pendaftaran::STATUS_BERJALAN)->count(),
-                'selesai' => $pendaftarans->where('status', Pendaftaran::STATUS_SELESAI)->count(),
-            ];
-        });
+                return [
+                    'prodi' => $g->prodi,
+                    'total_pendaftaran' => $pendaftarans->count(),
+                    'berjalan' => $pendaftarans->where('status', Pendaftaran::STATUS_BERJALAN)->count(),
+                    'selesai' => $pendaftarans->where('status', Pendaftaran::STATUS_SELESAI)->count(),
+                ];
+            });
 
         return view('admin.rekap.per-prodi', compact('prodis'));
     }
@@ -114,11 +116,12 @@ class RekapController extends Controller
     public function perMitra(): View
     {
         $mitras = Mitra::query()
+            ->with(['programs.pendaftarans'])
             ->withCount('programs')
             ->get()
             ->map(function ($mitra) {
                 $programs = $mitra->programs;
-                $pendaftarans = Pendaftaran::whereIn('program_id', $programs->pluck('id'))->get();
+                $pendaftarans = $programs->flatMap->pendaftarans;
                 
                 return [
                     'mitra' => $mitra,

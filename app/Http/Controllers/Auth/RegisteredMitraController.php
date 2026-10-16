@@ -38,7 +38,7 @@ class RegisteredMitraController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'role' => 'mitra',
-            'active' => false, // Requires admin approval
+            'is_active' => false, // Requires admin approval
         ]);
 
         // Create mitra profile
