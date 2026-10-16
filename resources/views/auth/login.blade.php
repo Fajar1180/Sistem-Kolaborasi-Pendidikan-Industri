@@ -42,5 +42,19 @@
                 Lupa kata sandi?
             </a>
         @endif
+
+        <div class="border-t border-slate-200 pt-4">
+            <p class="text-center text-sm text-slate-600">
+                Belum punya akun?
+            </p>
+            <div class="mt-2 space-y-2 text-center">
+                <a href="{{ route('register-mitra') }}" class="block rounded bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700">
+                    Daftar sebagai Mitra Industri
+                </a>
+                <p class="text-xs text-slate-500">
+                    Mahasiswa/Dosen: Hubungi admin kampus untuk membuat akun.
+                </p>
+            </div>
+        </div>
     </form>
 @endsection
