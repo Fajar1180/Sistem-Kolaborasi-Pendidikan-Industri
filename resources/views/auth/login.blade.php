@@ -8,6 +8,12 @@
         <div class="mb-4 rounded bg-green-100 px-3 py-2 text-sm text-green-800">{{ session('status') }}</div>
     @endif
 
+    @if (session('info'))
+        <div class="mb-4 rounded-lg bg-blue-50 border border-blue-200 px-4 py-3 text-blue-800 text-sm">
+            <span class="font-medium">ℹ️</span> {{ session('info') }}
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('login') }}" class="space-y-4">
         @csrf
 
