@@ -61,7 +61,7 @@ class UserImportController extends Controller
         if ($header === false) {
             fclose($handle);
 
-            return back()->with('error', 'Berkas CSV kosong. Tidak ada data yang diimpor.');
+            return back()->withErrors(['file' => 'Berkas CSV kosong. Tidak ada data yang diimpor.']);
         }
 
         $header = array_map(fn ($kolom) => strtolower(trim((string) $kolom)), $header);
@@ -70,7 +70,7 @@ class UserImportController extends Controller
             if (! in_array($wajib, $header, true)) {
                 fclose($handle);
 
-                return back()->with('error', "Format header CSV tidak valid: kolom '{$wajib}' tidak ditemukan. Tidak ada data yang diimpor.");
+                return back()->withErrors(['file' => "Format header CSV tidak valid: kolom '{$wajib}' tidak ditemukan. Tidak ada data yang diimpor."]);
             }
         }
 
